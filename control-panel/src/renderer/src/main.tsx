@@ -13,6 +13,7 @@ import { EditReward } from './pages/rewards/edit-reward';
 import { Server } from './pages/server';
 import { RecycleBin } from './pages/recycle-bin';
 import { ViewRecycledItem } from './pages/recycle-bin/view-recycled-item';
+import './styles/main.scss';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

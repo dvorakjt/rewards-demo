@@ -1,0 +1,80 @@
+@use 'font-weights';
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/src/assets/fonts/bebas-neue/bebas-neue.ttf');
+}
+
+$bebas-neue: 'Bebas Neue';
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$regular;
+  font-style: normal;
+  src: url('/src/assets/fonts/lato/lato-regular.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$regular;
+  font-style: italic;
+  src: url('/src/assets/fonts/lato/lato-italic.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$black;
+  font-style: normal;
+  src: url('/src/assets/fonts/lato/lato-black.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$black;
+  font-style: italic;
+  src: url('/src/assets/fonts/lato/lato-black-italic.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$bold;
+  font-style: normal;
+  src: url('/src/assets/fonts/lato/lato-bold.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$bold;
+  font-style: italic;
+  src: url('/src/assets/fonts/lato/lato-bold-italic.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$light;
+  font-style: normal;
+  src: url('/src/assets/fonts/lato/lato-light.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$light;
+  font-style: italic;
+  src: url('/src/assets/fonts/lato/lato-light-italic.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$thin;
+  font-style: normal;
+  src: url('/src/assets/fonts/lato/lato-thin.ttf');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: font-weights.$thin;
+  font-style: italic;
+  src: url('/src/assets/fonts/lato/lato-thin-italic.ttf');
+}
+
+$lato: 'Lato';
