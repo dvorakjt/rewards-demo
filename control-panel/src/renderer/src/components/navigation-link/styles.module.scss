@@ -1,0 +1,28 @@
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.active_link {
+  @extend .link;
+}
+
+.active_icon {
+  display: none;
+}
+
+.link:hover .icon,
+.link:focus .icon,
+.active_link .icon {
+  display: none;
+}
+
+.link:hover .active_icon,
+.link:focus .active_icon,
+.active_link .active_icon {
+  display: initial;
+}

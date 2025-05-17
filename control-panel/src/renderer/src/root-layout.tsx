@@ -1,9 +1,10 @@
 import { Outlet } from 'react-router';
+import { NavigationMenu } from './components/navigation-menu';
 
 export function RootLayout() {
   return (
     <main>
-      <h1>Hello from Root</h1>
+      <NavigationMenu />
       <Outlet></Outlet>
     </main>
   );
