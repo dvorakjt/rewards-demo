@@ -1,0 +1,16 @@
+@use './font-families';
+@use './font-weights';
+@use './colors';
+
+.heading {
+  font-family: font-families.$bebas-neue;
+  font-weight: font-weights.$regular;
+  font-size: 80px;
+  text-decoration: underline;
+  text-decoration-color: colors.$teal;
+  text-decoration-thickness: 20px;
+  text-underline-offset: -10px;
+  text-decoration-skip-ink: none;
+  margin: 0;
+  padding: 0;
+}
