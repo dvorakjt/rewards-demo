@@ -1,0 +1,32 @@
+@use '../../styles/partials' as *;
+
+.partners_list {
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.partners_list li:nth-child(even) {
+  background-color: $color-yellow;
+}
+
+.partners_list li {
+  display: flex;
+  justify-content: center;
+  font-family: $font-family-lato;
+}
+
+.partners_list li > div {
+  width: 100%;
+  max-width: 645px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.partners_list li button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}

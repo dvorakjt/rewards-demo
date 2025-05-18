@@ -1,21 +1,20 @@
-import { ChangeEventHandler } from 'react';
 import magnifyingGlass from '/src/assets/icons/magnifying-glass.png';
 import styles from './styles.module.scss';
 
 interface SearchBarProps {
-  value: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
-export function SearchBar({ value, onChange }: SearchBarProps) {
+export function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
   return (
     <div className={styles.searchbar}>
       <img src={magnifyingGlass} alt="" className={styles.icon} />
       <input
         className={styles.input}
         type="text"
-        value={value}
-        onChange={onChange}
+        value={searchTerm}
+        onChange={({ target: { value } }) => setSearchTerm(value)}
       />
     </div>
   );

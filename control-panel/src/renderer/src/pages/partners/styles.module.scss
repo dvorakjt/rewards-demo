@@ -1,12 +1,12 @@
 @use '../../styles/partials' as *;
 
-.heading {
-  font-family: $font-family-bebas-neue;
-  font-weight: $font-weight-regular;
-  font-size: 80px;
-  text-decoration: underline;
-  text-decoration-color: $color-teal;
-  text-decoration-thickness: 20px;
-  text-underline-offset: -10px;
-  text-decoration-skip-ink: none;
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.header div {
+  width: 100%;
+  max-width: 645px;
 }
