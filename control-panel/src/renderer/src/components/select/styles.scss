@@ -1,5 +1,9 @@
 @use '../../styles/partials' as *;
 
+/*
+  Both select and ::picker(select) must have their appearance property set to 
+  base-select in order to enable the cusomizable select element.
+*/
 select,
 ::picker(select) {
   appearance: base-select;
@@ -11,7 +15,6 @@ $border-radius: 10px;
 $option-gap: 0.5em;
 
 select {
-  appearance: base-select;
   height: $select-height;
   border: $border-width solid $color-black-text;
   border-radius: $border-radius;
