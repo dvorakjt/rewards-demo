@@ -1,0 +1,93 @@
+@use '../../styles/partials' as *;
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+$select-height: 30px;
+$border-width: 1px;
+$border-radius: 10px;
+$option-gap: 0.5em;
+
+select {
+  appearance: base-select;
+  height: $select-height;
+  border: $border-width solid $color-black-text;
+  border-radius: $border-radius;
+  font-family: $font-family-lato;
+  font-weight: $font-weight-bold;
+  font-size: 18px;
+  background-color: $color-white;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+}
+
+select::picker-icon {
+  display: none;
+}
+
+select > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+select > button > div {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+select > button > div > img {
+  margin-left: $option-gap;
+}
+
+::picker(select) {
+  border: $border-width solid $color-black-text;
+  border-radius: $border-radius;
+  position: absolute;
+  top: -($select-height + $border-width);
+  left: 0;
+}
+
+option {
+  height: $select-height;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $option-gap;
+}
+
+option::checkmark {
+  display: none;
+}
+
+option:focus {
+  outline: none;
+}
+
+option:focus,
+option:hover {
+  background-color: $color-yellow;
+  cursor: pointer;
+}
+
+select img {
+  width: 15px;
+  height: 9px;
+}
+
+select > button > span {
+  height: 0;
+  overflow: hidden;
+}
+
+select > button > span > img {
+  margin-left: $option-gap;
+}

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { SearchBar } from '@renderer/components/searchbar';
+import { Select } from '@renderer/components/select';
 import { PartnersList } from '@renderer/components/partners-list';
 import type { Partner } from '@renderer/model/partner';
 import styles from './styles.module.scss';
 
 export function Partners() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [partners, setPartners] = useState(() => {
     const partners: Partner[] = [];
     for (let i = 1; i <= 10; i++) {
@@ -33,6 +35,22 @@ export function Partners() {
         <div>
           <h1 className="heading">Partners</h1>
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <Select
+            id="sort-order"
+            name="sortOrder"
+            value={sortOrder}
+            setValue={setSortOrder}
+            options={[
+              {
+                text: 'A to Z',
+                value: 'asc'
+              },
+              {
+                text: 'Z to A',
+                value: 'desc'
+              }
+            ]}
+          ></Select>
         </div>
       </header>
       <section>

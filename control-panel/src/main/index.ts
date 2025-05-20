@@ -35,6 +35,12 @@ function createWindow(): void {
   }
 }
 
+/*
+  Enable the experimental-web-platform-features flag to enable the 
+  customizable select element.
+*/
+app.commandLine.appendSwitch('enable-experimental-web-platform-features');
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
