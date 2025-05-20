@@ -1,4 +1,5 @@
 import { useState, useId, useEffect } from 'react';
+import { Checkbox } from '../checkbox';
 import { PartnersListItem } from '../partners-list-item';
 import type { Partner } from '../../model/partner';
 import deleteIcon from '/src/assets/icons/delete.png';
@@ -61,10 +62,9 @@ export function PartnersList({ partners, deletePartners }: PartnersListProps) {
   return (
     <ul className={styles.partners_list}>
       <li className={styles.controls_list_item}>
-        <div>
-          <div>
-            <input
-              type="checkbox"
+        <div className={styles.controls_list_item_content}>
+          <div className={styles.select_all_group}>
+            <Checkbox
               id={selectAllInputId}
               name="selectAllPartners"
               checked={allPartnersSelected}
@@ -73,15 +73,13 @@ export function PartnersList({ partners, deletePartners }: PartnersListProps) {
             />
             <label htmlFor={selectAllInputId}>Select All</label>
           </div>
-          <div>
-            <button
-              type="button"
-              onClick={deleteSelectedPartners}
-              className={styles.delete_button}
-            >
-              <img src={deleteIcon} alt="Delete selected partners" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={deleteSelectedPartners}
+            className={styles.delete_button}
+          >
+            <img src={deleteIcon} alt="Delete selected partners" />
+          </button>
         </div>
       </li>
       {partners.map((p) => {

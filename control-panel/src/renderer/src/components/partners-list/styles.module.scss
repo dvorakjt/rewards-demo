@@ -11,13 +11,13 @@
   background-color: $color-yellow;
 }
 
-.partners_list li {
+.controls_list_item {
   display: flex;
   justify-content: center;
   font-family: $font-family-lato;
 }
 
-.partners_list li > div {
+.controls_list_item_content {
   width: 100%;
   max-width: 645px;
   display: flex;
@@ -25,8 +25,12 @@
   align-items: center;
 }
 
-.partners_list li button {
+.select_all_group {
+  display: flex;
+  align-items: center;
+}
+
+.delete_button {
   background-color: transparent;
   border: none;
-  cursor: pointer;
 }

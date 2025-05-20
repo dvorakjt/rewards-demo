@@ -1,0 +1,24 @@
+@use '../../styles/partials' as *;
+
+.partners_list_item {
+  display: flex;
+  justify-content: center;
+  font-family: $font-family-lato;
+}
+
+.partners_list_item_content {
+  width: 100%;
+  max-width: 645px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkbox_group {
+  display: flex;
+  align-items: center;
+}
+
+.partners_list_item button {
+  background-color: transparent;
+  border: none;
+}

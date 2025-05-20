@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { useNavigate } from 'react-router';
+import { Checkbox } from '../checkbox';
 import type { Partner } from '@renderer/model/partner';
 import viewIcon from '/src/assets/icons/view.png';
 import editIcon from '/src/assets/icons/edit.png';
@@ -37,11 +38,10 @@ export function PartnersListItem({
   const viewIconAltText = `View ${partner.name}`;
 
   return (
-    <li>
-      <div>
-        <div>
-          <input
-            type="checkbox"
+    <li className={styles.partners_list_item}>
+      <div className={styles.partners_list_item_content}>
+        <div className={styles.checkbox_group}>
+          <Checkbox
             id={inputId}
             name={partner.name}
             aria-label={inputAriaLabel}
