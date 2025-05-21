@@ -3,17 +3,17 @@ import caretUp from '/src/assets/icons/caret-up.svg';
 import caretDown from '/src/assets/icons/caret-down.svg';
 import './styles.scss';
 
-interface Option {
+interface Option<T extends string> {
   text: string;
-  value: string;
+  value: T;
 }
 
-interface SelectProps {
+interface SelectProps<T extends string> {
   id: string;
   name: string;
-  options: Option[];
+  options: Option<T>[];
   value: string;
-  setValue: (value: string) => void;
+  setValue: (value: T) => void;
   className?: string;
   style?: CSSProperties;
 }
@@ -32,9 +32,13 @@ interface SelectProps {
  * For more information about the availability of this element,
  * see {@link https://caniuse.com/selectlist}
  */
-export function Select({ setValue, options, ...props }: SelectProps) {
-  let selectedOption: Option | null = null;
-  const otherOptions: Option[] = [];
+export function Select<T extends string = string>({
+  setValue,
+  options,
+  ...props
+}: SelectProps<T>) {
+  let selectedOption: Option<T> | null = null;
+  const otherOptions: Option<T>[] = [];
 
   for (const option of options) {
     if (option.value === props.value) {
@@ -45,7 +49,7 @@ export function Select({ setValue, options, ...props }: SelectProps) {
   }
 
   return (
-    <select {...props} onChange={({ target }) => setValue(target.value)}>
+    <select {...props} onChange={({ target }) => setValue(target.value as T)}>
       <button>
         <div>
           {selectedOption?.text}

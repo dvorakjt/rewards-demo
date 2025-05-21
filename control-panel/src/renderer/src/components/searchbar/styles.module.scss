@@ -1,7 +1,7 @@
 @use '../../styles/partials' as *;
 
 .searchbar {
-  width: 250px !important;
+  width: 250px;
   height: 30px;
   border: 1px solid $color-black-text;
   box-shadow: inset -3px 3px 3px rgba(0, 0, 0, 0.25);
