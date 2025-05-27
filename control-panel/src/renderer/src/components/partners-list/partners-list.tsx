@@ -51,11 +51,13 @@ export function PartnersList({ partners, deletePartners }: PartnersListProps) {
     }
 
     if (shouldUpdateSelectedIds) {
-      setSelectedPartnerIds(
-        selectedPartnerIds.filter((id) => {
+      setSelectedPartnerIds((prev) => {
+        console.log(prev);
+        console.log(partners);
+        return prev.filter((id) => {
           return !!partners.find((p) => p.id === id);
-        })
-      );
+        });
+      });
     }
   }, [partners, selectedPartnerIds]);
 

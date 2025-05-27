@@ -1,20 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { v4 as uuid } from 'uuid';
+import { usePagination } from '@renderer/hooks/use-pagination';
 import { SearchBar } from '@renderer/components/searchbar';
 import { Select } from '@renderer/components/select';
 import { PartnersList } from '@renderer/components/partners-list';
 import type { Partner } from '@renderer/model/partner';
 import newPartnerIcon from '/src/assets/icons/new-partner.png';
 import styles from './styles.module.scss';
+import { PaginationControls } from '@renderer/components/pagination-controls';
 
 type SortOrder = 'asc' | 'desc';
 
+// selectedPartnerIds should probably live in this component
+// selectedParnerIds should be reset when the seach term is reset or 
+// the sort order is changed
 export function Partners() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const [partners, setPartners] = useState(() => generateDummyPartners(10));
+  const [partners, setPartners] = useState(() => generateDummyPartners(100));
 
   const filteredAndSortedPartners = alphabetizePartners(
     partners.filter((p) => {
@@ -23,12 +28,27 @@ export function Partners() {
     sortOrder
   );
 
+  const {
+    visibleItems: visiblePartners,
+    currentPage,
+    lastPage,
+    visiblePageRange,
+    goToNextPage,
+    goToPreviousPage,
+    goToPage
+  } = usePagination(filteredAndSortedPartners, 10, 5);
+
   const visitNewPartnerPage = () => navigate('/partners/new');
 
   const deletePartners = (partnerIds: string[]) => {
     const updatedPartners = partners.filter((p) => !partnerIds.includes(p.id));
     setPartners(updatedPartners);
   };
+
+  useEffect(() => {
+    goToPage(1);
+    // also clear selected partners
+  }, [searchTerm]);
 
   return (
     <div>
@@ -70,8 +90,15 @@ export function Partners() {
       </header>
       <section>
         <PartnersList
-          partners={filteredAndSortedPartners}
+          partners={visiblePartners}
           deletePartners={deletePartners}
+        />
+        <PaginationControls
+          currentPage={currentPage}
+          lastPage={lastPage}
+          visiblePageRange={visiblePageRange}
+          goToNextPage={goToNextPage}
+          goToPreviousPage={goToPreviousPage}
         />
       </section>
     </div>
