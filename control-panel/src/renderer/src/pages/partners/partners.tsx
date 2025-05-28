@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import { usePagination } from '@renderer/hooks/use-pagination';
@@ -13,13 +13,16 @@ import { PaginationControls } from '@renderer/components/pagination-controls';
 type SortOrder = 'asc' | 'desc';
 
 // selectedPartnerIds should probably live in this component
-// selectedParnerIds should be reset when the seach term is reset or 
+// selectedParnerIds should be reset when the seach term is reset or
 // the sort order is changed
 export function Partners() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  // This may ultimately live in a context somewhere that loads this data from
+  // the file system
   const [partners, setPartners] = useState(() => generateDummyPartners(100));
+  const [selectedPartnerIds, setSelectedPartnerIds] = useState<string[]>([]);
 
   const filteredAndSortedPartners = alphabetizePartners(
     partners.filter((p) => {
@@ -40,15 +43,38 @@ export function Partners() {
 
   const visitNewPartnerPage = () => navigate('/partners/new');
 
-  const deletePartners = (partnerIds: string[]) => {
-    const updatedPartners = partners.filter((p) => !partnerIds.includes(p.id));
+  const deleteSelectedPartners = () => {
+    const updatedPartners = partners.filter(
+      (p) => !selectedPartnerIds.includes(p.id)
+    );
     setPartners(updatedPartners);
+    // this is redundant at the moment
+    setSelectedPartnerIds([]);
   };
 
   useEffect(() => {
     goToPage(1);
     // also clear selected partners
   }, [searchTerm]);
+
+  const visiblePartnerIdsRef = useRef(
+    new Set(visiblePartners.map((p) => p.id))
+  );
+
+  useEffect(() => {
+    let visiblePartnersHaveChanged =
+      visiblePartners.length !== visiblePartnerIdsRef.current.size;
+    if (!visiblePartnersHaveChanged) {
+      visiblePartnersHaveChanged = !visiblePartners.every((p) =>
+        visiblePartnerIdsRef.current.has(p.id)
+      );
+    }
+    if (visiblePartnersHaveChanged) {
+      setSelectedPartnerIds([]);
+    }
+
+    visiblePartnerIdsRef.current = new Set(visiblePartners.map((p) => p.id));
+  }, [visiblePartners]);
 
   return (
     <div>
@@ -91,7 +117,9 @@ export function Partners() {
       <section>
         <PartnersList
           partners={visiblePartners}
-          deletePartners={deletePartners}
+          selectedPartnerIds={selectedPartnerIds}
+          setSelectedPartnerIds={setSelectedPartnerIds}
+          deleteSelectedPartners={deleteSelectedPartners}
         />
         <PaginationControls
           currentPage={currentPage}

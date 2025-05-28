@@ -1,4 +1,10 @@
-import { useState, useId, useEffect } from 'react';
+import {
+  useState,
+  useId,
+  useEffect,
+  type Dispatch,
+  type SetStateAction
+} from 'react';
 import { Checkbox } from '../checkbox';
 import { PartnersListItem } from '../partners-list-item';
 import type { Partner } from '../../model/partner';
@@ -7,11 +13,17 @@ import styles from './styles.module.scss';
 
 interface PartnersListProps {
   partners: Partner[];
-  deletePartners: (partnerIds: string[]) => void;
+  selectedPartnerIds: string[];
+  setSelectedPartnerIds: Dispatch<SetStateAction<string[]>>;
+  deleteSelectedPartners: () => void;
 }
 
-export function PartnersList({ partners, deletePartners }: PartnersListProps) {
-  const [selectedPartnerIds, setSelectedPartnerIds] = useState<string[]>([]);
+export function PartnersList({
+  partners,
+  selectedPartnerIds,
+  setSelectedPartnerIds,
+  deleteSelectedPartners
+}: PartnersListProps) {
   const allPartnersSelected = selectedPartnerIds.length === partners.length;
   const selectAllInputId = useId();
   const selectAllAriaLabel = 'Select all partners';
@@ -32,14 +44,10 @@ export function PartnersList({ partners, deletePartners }: PartnersListProps) {
     setSelectedPartnerIds([]);
   }
 
-  function deleteSelectedPartners() {
-    deletePartners(selectedPartnerIds);
-  }
-
   useEffect(() => {
     /*
       Unselect partnerIds when the corresponding partners are removed from the 
-      partners array.
+      visible list.
     */
     let shouldUpdateSelectedIds = false;
 
@@ -52,8 +60,6 @@ export function PartnersList({ partners, deletePartners }: PartnersListProps) {
 
     if (shouldUpdateSelectedIds) {
       setSelectedPartnerIds((prev) => {
-        console.log(prev);
-        console.log(partners);
         return prev.filter((id) => {
           return !!partners.find((p) => p.id === id);
         });
