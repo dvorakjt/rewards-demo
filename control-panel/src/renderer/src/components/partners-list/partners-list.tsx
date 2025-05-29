@@ -1,10 +1,4 @@
-import {
-  useState,
-  useId,
-  useEffect,
-  type Dispatch,
-  type SetStateAction
-} from 'react';
+import { useId, type Dispatch, type SetStateAction } from 'react';
 import { Checkbox } from '../checkbox';
 import { PartnersListItem } from '../partners-list-item';
 import type { Partner } from '../../model/partner';
@@ -43,29 +37,6 @@ export function PartnersList({
   function deselectAll() {
     setSelectedPartnerIds([]);
   }
-
-  useEffect(() => {
-    /*
-      Unselect partnerIds when the corresponding partners are removed from the 
-      visible list.
-    */
-    let shouldUpdateSelectedIds = false;
-
-    for (const partnerId of selectedPartnerIds) {
-      if (!partners.find((p) => p.id === partnerId)) {
-        shouldUpdateSelectedIds = true;
-        break;
-      }
-    }
-
-    if (shouldUpdateSelectedIds) {
-      setSelectedPartnerIds((prev) => {
-        return prev.filter((id) => {
-          return !!partners.find((p) => p.id === id);
-        });
-      });
-    }
-  }, [partners, selectedPartnerIds]);
 
   return (
     <ul className={styles.partners_list}>

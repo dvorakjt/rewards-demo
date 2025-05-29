@@ -1,34 +1,29 @@
-import { useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { v4 as uuid } from 'uuid';
-import { usePagination } from '@renderer/hooks/use-pagination';
+import { PartnersContext } from '@renderer/contexts/partners-context/partners-context';
 import { SearchBar } from '@renderer/components/searchbar';
 import { Select } from '@renderer/components/select';
 import { PartnersList } from '@renderer/components/partners-list';
-import type { Partner } from '@renderer/model/partner';
+import { PaginationControls } from '@renderer/components/pagination-controls';
+import { SortOrder } from '@renderer/model/sort-order';
+import { usePagination } from '@renderer/hooks/use-pagination';
+import { alphabetize } from '@renderer/util/alphabetize';
 import newPartnerIcon from '/src/assets/icons/new-partner.png';
 import styles from './styles.module.scss';
-import { PaginationControls } from '@renderer/components/pagination-controls';
 
-type SortOrder = 'asc' | 'desc';
-
-// selectedPartnerIds should probably live in this component
-// selectedParnerIds should be reset when the seach term is reset or
-// the sort order is changed
 export function Partners() {
-  const navigate = useNavigate();
+  const { partners, deletePartnersById } = useContext(PartnersContext)!;
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  // This may ultimately live in a context somewhere that loads this data from
-  // the file system
-  const [partners, setPartners] = useState(() => generateDummyPartners(100));
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Ascending);
   const [selectedPartnerIds, setSelectedPartnerIds] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  const filteredAndSortedPartners = alphabetizePartners(
+  const filteredAndSortedPartners = alphabetize(
     partners.filter((p) => {
       return p.name.includes(searchTerm);
     }),
-    sortOrder
+    sortOrder,
+    'name'
   );
 
   const {
@@ -40,22 +35,6 @@ export function Partners() {
     goToPreviousPage,
     goToPage
   } = usePagination(filteredAndSortedPartners, 10, 5);
-
-  const visitNewPartnerPage = () => navigate('/partners/new');
-
-  const deleteSelectedPartners = () => {
-    const updatedPartners = partners.filter(
-      (p) => !selectedPartnerIds.includes(p.id)
-    );
-    setPartners(updatedPartners);
-    // this is redundant at the moment
-    setSelectedPartnerIds([]);
-  };
-
-  useEffect(() => {
-    goToPage(1);
-    // also clear selected partners
-  }, [searchTerm]);
 
   const visiblePartnerIdsRef = useRef(
     new Set(visiblePartners.map((p) => p.id))
@@ -76,6 +55,16 @@ export function Partners() {
     visiblePartnerIdsRef.current = new Set(visiblePartners.map((p) => p.id));
   }, [visiblePartners]);
 
+  useEffect(() => {
+    goToPage(1);
+  }, [searchTerm]);
+
+  const visitNewPartnerPage = () => navigate('/partners/new');
+
+  const deleteSelectedPartners = () => {
+    deletePartnersById(selectedPartnerIds);
+  };
+
   return (
     <div>
       <header className={styles.header}>
@@ -95,11 +84,11 @@ export function Partners() {
               options={[
                 {
                   text: 'A to Z',
-                  value: 'asc'
+                  value: SortOrder.Ascending
                 },
                 {
                   text: 'Z to A',
-                  value: 'desc'
+                  value: SortOrder.Descending
                 }
               ]}
               className={styles.header_control}
@@ -131,37 +120,4 @@ export function Partners() {
       </section>
     </div>
   );
-}
-
-function alphabetizePartners(partners: Partner[], sortOrder: SortOrder) {
-  return partners.toSorted(({ name: a }, { name: b }) => {
-    let result: number;
-    a = a.toLowerCase();
-    b = b.toLowerCase();
-
-    if (a < b) {
-      result = -1;
-    } else if (a > b) {
-      result = 1;
-    } else {
-      result = 0;
-    }
-
-    if (sortOrder === 'desc') {
-      result *= -1;
-    }
-
-    return result;
-  });
-}
-
-function generateDummyPartners(count: number) {
-  const partners: Partner[] = [];
-  for (let i = 1; i <= count; i++) {
-    partners.push({
-      id: uuid(),
-      name: `Partner ${i.toString().padStart(count.toString().length, '0')}`
-    });
-  }
-  return partners;
 }
