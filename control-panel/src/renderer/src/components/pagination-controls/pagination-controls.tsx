@@ -5,13 +5,40 @@ import forwardArrowDisabled from '/src/assets/icons/forward-arrow-disabled.png';
 import styles from './styles.module.scss';
 
 interface PaginationControlsProps {
+  /**
+   * The currently visible page.
+   */
   currentPage: number;
+  /**
+   * The last page in the paginated list.
+   */
   lastPage: number;
+  /**
+   * The range of page numbers that the controls should display.
+   *
+   * @remarks
+   * The range is inclusive of the starting value and exlusive of the ending
+   * value.
+   */
   visiblePageRange: [number, number];
+  /**
+   * A function that navigates to the next page in the paginated list and may
+   * alter the visiblePageRange.
+   */
   goToNextPage: () => void;
+  /**
+   * A function that navigates to the previous page in the paginated list and
+   * may alter the visiblePageRange.
+   */
   goToPreviousPage: () => void;
 }
 
+/**
+ * Renders controls (numbered buttons, arrows, etc.) for paging through a
+ * paginated list.
+ *
+ * @param props {@link PaginationControlsProps}
+ */
 export function PaginationControls({
   currentPage,
   lastPage,

@@ -6,12 +6,31 @@ import deleteIcon from '/src/assets/icons/delete.png';
 import styles from './styles.module.scss';
 
 interface PartnersListProps {
+  /**
+   * An array of partners to render.
+   */
   partners: Partner[];
+  /**
+   * An array of ids representing the partners the user has currently selected.
+   */
   selectedPartnerIds: string[];
+  /**
+   * A function for setting the currently selected ids.
+   */
   setSelectedPartnerIds: Dispatch<SetStateAction<string[]>>;
+  /**
+   * A function that should move all currently selected partners to the
+   * recycle bin.
+   */
   deleteSelectedPartners: () => void;
 }
 
+/**
+ * Renders a list that displays information about existing partners and allows
+ * the user to view, edit, and delete them.
+ *
+ * @param props {@link PartnersListProps}
+ */
 export function PartnersList({
   partners,
   selectedPartnerIds,

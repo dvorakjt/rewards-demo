@@ -7,11 +7,27 @@ import editIcon from '/src/assets/icons/edit.png';
 import styles from './styles.module.scss';
 
 interface PartnersListItemProps {
+  /**
+   * The partner whose information is to be displayed in the list item.
+   */
   partner: Partner;
+  /**
+   * A boolean value representing whether or not the user has selected this
+   * partner.
+   */
   isSelected: boolean;
+  /**
+   * A function for selecting and unselecting the partner.
+   */
   setIsSelected: (isSelected: boolean) => void;
 }
 
+/**
+ * Renders a list item that displays information about a specific partner and
+ * allows the user to select, view, or edit that partner.
+ *
+ * @param props {@link PartnersListItemProps}
+ */
 export function PartnersListItem({
   partner,
   isSelected,

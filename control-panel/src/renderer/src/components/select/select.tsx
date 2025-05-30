@@ -3,23 +3,60 @@ import caretUp from '/src/assets/icons/caret-up.svg';
 import caretDown from '/src/assets/icons/caret-down.svg';
 import './styles.scss';
 
+/**
+ * Represents an option that should be rendered by the {@link Select} component.
+ */
 interface Option<T extends string> {
+  /**
+   * The text to display to the user for an option.
+   */
   text: string;
+  /**
+   * The actual value of the option.
+   */
   value: T;
 }
 
+/**
+ * Props expected by the {@link Select} component.
+ */
 interface SelectProps<T extends string> {
+  /**
+   * The id attribute of the select element.
+   */
   id: string;
+  /**
+   * The name attribute of the select element.
+   */
   name: string;
+  /**
+   * An array of objects containing values and text to display.
+   */
   options: Option<T>[];
+  /**
+   * The currently selected value.
+   */
   value: string;
+  /**
+   * A function for updating the value of the select element.
+   * @param value
+   * @returns
+   */
   setValue: (value: T) => void;
+  /**
+   * A CSS class to be applied to the select element. Optional.
+   */
   className?: string;
+  /**
+   * CSS styles to be applied to the select element. Optional.
+   */
   style?: CSSProperties;
 }
 
 /**
  * A customized select component that leverages the customizable select element.
+ *
+ * @param props {@link SelectProps}
  *
  * @remarks
  * At the time of writing, the customizable select element is available in
