@@ -61,6 +61,7 @@ export function PaginationControls({
         <img
           src={hasPreviousPage ? backArrowEnabled : backArrowDisabled}
           alt="Go to previous page"
+          className={styles.arrow}
         />
       </button>
       {(function* () {
@@ -88,6 +89,7 @@ export function PaginationControls({
         <img
           src={hasNextPage ? forwardArrowEnabled : forwardArrowDisabled}
           alt="Go to next page"
+          className={styles.arrow}
         />
       </button>
     </div>
