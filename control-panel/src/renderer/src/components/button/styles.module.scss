@@ -1,0 +1,44 @@
+@use '../../styles/partials' as *;
+
+$border-width: 4px;
+
+.wrapper {
+  display: inline-block;
+  padding: $border-width;
+}
+
+.button {
+  font-family: $font-family-bebas-neue;
+  font-size: 24px;
+  font-weight: $font-weight-regular;
+  letter-spacing: 3%;
+  padding: 9px 20px 8px 20px;
+  border-radius: 40px;
+  border: $border-width solid $color-black-8by8;
+  outline: $border-width solid $color-white;
+}
+
+.gradient {
+  @extend .button;
+  background: linear-gradient(90deg, $color-teal, $color-yellow);
+}
+
+.gradient-text {
+  @extend .button;
+  background-color: $color-black-8by8;
+  .contents {
+    background: linear-gradient(90deg, $color-teal, $color-yellow);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    color: transparent;
+    font-size: inherit;
+  }
+}
+
+.solid-yellow {
+  @extend.button;
+  background-color: $color-yellow;
+}

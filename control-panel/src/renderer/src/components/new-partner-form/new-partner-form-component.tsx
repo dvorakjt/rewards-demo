@@ -1,13 +1,14 @@
 import { useContext } from 'react';
 import { useForm, useValue, usePipe } from 'fully-formed';
-import { PartnersContext } from '@renderer/contexts/partners-context/partners-context';
+import { PartnersContext } from '@renderer/contexts/partners-context';
 import { NewPartnerForm } from './new-partner-form';
 import { InputGroup } from '../input-group';
 import { ImageInput } from '../image-input';
 import { Label } from '../label';
-import { TextArea } from '../textarea/textarea';
+import { TextArea } from '../textarea';
 import { Messages } from '../messages';
 import styles from './styles.module.scss';
+import { FileInput } from '../file-input';
 
 export function NewPartnerFormComponent() {
   const { partners } = useContext(PartnersContext)!;
@@ -58,6 +59,7 @@ export function NewPartnerFormComponent() {
         labelVariant="floating"
         containerClassName={styles.input_group}
       />
+      <FileInput />
     </form>
   );
 }

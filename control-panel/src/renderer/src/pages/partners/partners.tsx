@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { PartnersContext } from '@renderer/contexts/partners-context/partners-context';
+import { PartnersContext } from '@renderer/contexts/partners-context';
 import { SearchBar } from '@renderer/components/searchbar';
 import { Select } from '@renderer/components/select';
 import { PartnersList } from '@renderer/components/partners-list';
