@@ -1,0 +1,15 @@
+@use '../../styles/partials' as *;
+
+.message {
+  display: block;
+  font-family: $font-family-lato;
+  font-size: 14px;
+  color: $color-error;
+  padding: 0;
+}
+
+.hidden_message {
+  @extend .message;
+  visibility: hidden;
+  height: 0;
+}

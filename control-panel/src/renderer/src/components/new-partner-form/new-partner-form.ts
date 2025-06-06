@@ -143,9 +143,13 @@ class NewPartnerTemplate extends FormTemplate {
       new Adapter({
         name: 'website',
         source: website,
-        adaptFn: ({ value, validity }) => {
-          if (validity !== Validity.Valid) return '';
-          return new URL(value).toString();
+        adaptFn: ({ value }) => {
+          try {
+            const url = new URL(value);
+            return url.toString();
+          } catch (e) {
+            return '';
+          }
         }
       })
     ];

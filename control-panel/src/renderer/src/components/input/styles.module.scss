@@ -1,0 +1,66 @@
+@use '../../styles/partials' as *;
+
+.input {
+  font-family: $font-family-lato;
+  font-weight: $font-weight-bold;
+  font-size: 18px;
+  display: block;
+  background-color: transparent;
+  color: transparent;
+  border-radius: 0px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 3px solid $color-black-text;
+  margin: 0;
+  padding: 8px 0 8px 0;
+  width: 100%;
+  transition: color 250ms linear;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: transparent;
+    transition: color 250ms linear;
+  }
+}
+
+.input:autofill,
+.input:-webkit-autofill {
+  color: $color-black-text;
+  transition: none;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.input[type='number'] {
+  appearance: textField;
+  -moz-appearance: textfield;
+}
+
+.input[type='date'] {
+  /* Ensure that the date-type input is the correct height on iOS. */
+  height: 43px;
+}
+
+.show_text {
+  color: $color-black-text;
+
+  &::placeholder {
+    color: $color-smoke;
+  }
+}
+
+.invalid {
+  border-color: $color-error;
+}
+
+.caution {
+  border-color: $color-review-light;
+}

@@ -70,10 +70,18 @@ export function PartnersListItem({
         </div>
         <div>
           <button type="button" onClick={editPartner}>
-            <img src={editIcon} alt={editIconAltText} />
+            <img
+              src={editIcon}
+              alt={editIconAltText}
+              className={styles.action_icon}
+            />
           </button>
           <button type="button" onClick={viewPartner}>
-            <img src={viewIcon} alt={viewIconAltText} />
+            <img
+              src={viewIcon}
+              alt={viewIconAltText}
+              className={styles.action_icon}
+            />
           </button>
         </div>
       </div>

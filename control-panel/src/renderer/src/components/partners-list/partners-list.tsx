@@ -76,7 +76,11 @@ export function PartnersList({
             onClick={deleteSelectedPartners}
             className={styles.delete_button}
           >
-            <img src={deleteIcon} alt="Delete selected partners" />
+            <img
+              src={deleteIcon}
+              alt="Delete selected partners"
+              className={styles.delete_icon}
+            />
           </button>
         </div>
       </li>

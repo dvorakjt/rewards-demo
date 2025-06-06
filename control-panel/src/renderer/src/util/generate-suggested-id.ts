@@ -1,5 +1,5 @@
 export function generateSuggestedId(name: string, existingNames: Set<string>) {
-  let id = name.replace(/[^a-z\-_]/g, (char) => {
+  let id = name.replace(/[^a-z0-9\-_]/g, (char) => {
     if (/[A-Z]/.test(char)) return char.toLowerCase();
     else if (/\s/.test(char)) return '-';
     return '';

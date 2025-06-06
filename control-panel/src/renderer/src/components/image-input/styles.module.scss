@@ -1,0 +1,92 @@
+@use '../../styles/partials' as *;
+
+$drop-zone-size: 200px;
+
+.container {
+  width: $drop-zone-size;
+}
+
+.label {
+  display: block;
+  font-family: $font-family-lato;
+  font-weight: $font-weight-bold;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.drop_zone {
+  width: $drop-zone-size;
+  height: $drop-zone-size;
+}
+
+.no_image_uploaded {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed $color-black-text;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.instructions {
+  font-family: $font-family-lato;
+  font-size: 18px;
+  text-align: center;
+}
+
+.bold {
+  font-weight: $font-weight-bold;
+}
+
+$logo-margin: 30px;
+
+.image_container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: $drop-zone-size - $logo-margin * 2;
+  height: auto;
+}
+
+.edit_image_buttons {
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 4.5px;
+}
+
+.edit_image_button {
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid $color-black-text;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit_image_icon {
+  width: 25px;
+  height: 25px;
+}
+
+.image_container:hover > .edit_image_buttons,
+.image_container:focus-within > .edit_image_buttons {
+  opacity: 1;
+}
