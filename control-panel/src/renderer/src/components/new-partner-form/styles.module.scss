@@ -2,6 +2,13 @@
   width: 315px;
 }
 
-.input_group {
+.input_group,
+.logo_input,
+.messages {
   margin-bottom: 30px;
+}
+
+.logo_input {
+  margin-left: auto;
+  margin-right: auto;
 }

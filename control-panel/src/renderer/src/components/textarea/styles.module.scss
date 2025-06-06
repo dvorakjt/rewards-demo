@@ -1,0 +1,54 @@
+@use '../../styles/partials' as *;
+
+.textarea {
+  font-family: $font-family-lato;
+  font-weight: $font-weight-bold;
+  font-size: 18px;
+  display: block;
+  background-color: transparent;
+  color: transparent;
+  border-radius: 0px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 3px solid $color-black-text;
+  margin: 0;
+  padding: 8px 0 8px 0;
+  width: 100%;
+  transition: color 250ms linear;
+  position: relative;
+  height: 43px;
+  resize: none;
+  overflow: hidden;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: transparent;
+    transition: color 250ms linear;
+  }
+}
+
+.textarea:autofill,
+.textarea:-webkit-autofill {
+  color: $color-black-text;
+  transition: none;
+}
+
+.show_text {
+  color: $color-black-text;
+
+  &::placeholder {
+    color: $color-smoke;
+  }
+}
+
+.invalid {
+  border-color: $color-error;
+}
+
+.caution {
+  border-color: $color-review-light;
+}
