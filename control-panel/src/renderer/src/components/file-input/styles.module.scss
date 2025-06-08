@@ -2,6 +2,7 @@
 
 .container {
   display: flex;
+  max-width: 100%;
 }
 
 .file_picker_button {
@@ -9,11 +10,19 @@
 }
 
 .selected_file {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.selected_file_name {
   font-family: $font-family-lato;
   font-weight: $font-weight-regular;
   font-size: 15px;
-  display: flex;
-  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .file_icon {

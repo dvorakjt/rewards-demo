@@ -64,9 +64,9 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
           Choose File
         </Button>
         {selectedFile && (
-          <span className={styles.selected_file}>
+          <div className={styles.selected_file}>
             <img src={fileIcon} alt="" className={styles.file_icon} />
-            {selectedFile}
+            <div className={styles.selected_file_name}>{selectedFile}</div>
             <button
               type="button"
               onClick={clearFiles}
@@ -78,7 +78,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
                 className={styles.delete_icon}
               />
             </button>
-          </span>
+          </div>
         )}
       </div>
     );

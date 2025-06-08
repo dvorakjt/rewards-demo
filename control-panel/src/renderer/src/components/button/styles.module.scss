@@ -18,6 +18,10 @@ $border-width: 4px;
   outline: $border-width solid $color-white;
 }
 
+.contents {
+  white-space: nowrap;
+}
+
 .gradient {
   @extend .button;
   background: linear-gradient(90deg, $color-teal, $color-yellow);
