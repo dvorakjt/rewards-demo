@@ -5,6 +5,7 @@ import { SearchBar } from '@renderer/components/searchbar';
 import { Select } from '@renderer/components/select';
 import { PartnersList } from '@renderer/components/partners-list';
 import { PaginationControls } from '@renderer/components/pagination-controls';
+import { ToolTip } from '@renderer/components/tooltip';
 import { SortOrder } from '@renderer/model/sort-order';
 import { usePagination } from '@renderer/hooks/use-pagination';
 import { alphabetize } from '@renderer/util/alphabetize';
@@ -93,13 +94,16 @@ export function Partners() {
               ]}
               className={styles.header_control}
             />
-            <button
-              type="button"
-              className={styles.new_partner_button}
-              onClick={visitNewPartnerPage}
-            >
-              <img src={newPartnerIcon} className={styles.new_partner_icon} />
-            </button>
+            <ToolTip tip="hello">
+              <button
+                type="button"
+                className={styles.new_partner_button}
+                onClick={visitNewPartnerPage}
+                title="Add partner"
+              >
+                <img src={newPartnerIcon} className={styles.new_partner_icon} />
+              </button>
+            </ToolTip>
           </div>
         </div>
       </header>
