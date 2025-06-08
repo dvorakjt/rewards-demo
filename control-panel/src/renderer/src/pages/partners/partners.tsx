@@ -110,13 +110,16 @@ export function Partners() {
           setSelectedPartnerIds={setSelectedPartnerIds}
           deleteSelectedPartners={deleteSelectedPartners}
         />
-        <PaginationControls
-          currentPage={currentPage}
-          lastPage={lastPage}
-          visiblePageRange={visiblePageRange}
-          goToNextPage={goToNextPage}
-          goToPreviousPage={goToPreviousPage}
-        />
+        <div className={styles.pagination_controls_container}>
+          <PaginationControls
+            currentPage={currentPage}
+            lastPage={lastPage}
+            visiblePageRange={visiblePageRange}
+            goToNextPage={goToNextPage}
+            goToPreviousPage={goToPreviousPage}
+            goToPage={goToPage}
+          />
+        </div>
       </section>
     </div>
   );

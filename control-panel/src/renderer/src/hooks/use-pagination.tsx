@@ -67,7 +67,13 @@ export function usePagination<T>(
   }
 
   function goToPage(page: number) {
-    if (page === state.currentPage || page < 1 || page > lastPage) return;
+    if (page < 1 || page > lastPage) {
+      throw new RangeError(
+        'Page cannot be less than 1 or greater than ' + lastPage
+      );
+    }
+
+    if (page === state.currentPage) return;
 
     let visiblePageRange = state.visiblePageRange;
 

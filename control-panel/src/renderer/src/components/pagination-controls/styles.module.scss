@@ -1,17 +1,31 @@
 @use '../../styles/partials' as *;
 
+.container {
+  width: fit-content;
+}
+
+.go_to_controls {
+  display: flex;
+  justify-content: space-between;
+}
+
 .controls {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .control_button {
   border: none;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0;
+  font-family: $font-family-lato;
+  font-size: 20px;
+  font-weight: $font-weight-regular;
 }
 
 .page_number {
@@ -28,4 +42,38 @@
 .arrow {
   width: 12px;
   height: auto;
+}
+
+.go_to_page {
+  display: flex;
+  align-items: flex-end;
+}
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  margin-right: 8px;
+}
+
+.go_to_input {
+  width: 60px;
+  height: 30px;
+  font-family: $font-family-lato;
+  border: 1px solid $color-black-text;
+  box-shadow: inset -3px 3px 3px rgba(0, 0, 0, 0.25);
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.error_message {
+  font-family: $font-family-lato;
+  font-weight: $font-weight-regular;
+  font-size: 14px;
+  color: $color-error;
 }
