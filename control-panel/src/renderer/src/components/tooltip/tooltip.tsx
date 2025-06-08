@@ -6,24 +6,44 @@ type ChildElement = JSX.Element | string | number | boolean | null | undefined;
 interface ToolTipProps {
   tip: string;
   children: ChildElement;
+  placement: 'above' | 'below' | 'left' | 'right';
 }
 
-export function ToolTip({ children, tip }: ToolTipProps) {
+export function ToolTip({ children, tip, placement }: ToolTipProps) {
   const toolTipRef = useRef<HTMLDivElement | null>(null);
   const [showToolTip, setShowToolTip] = useState(false);
   const [translate, setTranslate] = useState<{ x: string; y: string }>({
     x: '-100%',
     y: '-100%'
   });
+
   useEffect(() => {
     const subjectElement = getPreviousSibling();
     const cleanUpFunctions: Array<Function> = [];
 
     if (subjectElement) {
       const pollSubject = setInterval(() => {
-        const { left, bottom } = subjectElement.getBoundingClientRect();
-        const translateX = left + 'px';
-        const translateY = bottom + 'px';
+        const { top, left, bottom, right } =
+          subjectElement.getBoundingClientRect();
+        let translateX: string, translateY: string;
+        switch (placement) {
+          case 'above':
+            translateX = left + 'px';
+            translateY = `calc(${top}px - 100%)`;
+            break;
+          case 'below':
+            translateX = left + 'px';
+            translateY = bottom + 'px';
+            break;
+          case 'left':
+            translateX = `calc(${left}px - 100%)`;
+            translateY = top + 'px';
+            break;
+          case 'right':
+            translateX = right + 'px';
+            translateY = top + 'px';
+            break;
+        }
         setTranslate({ x: translateX, y: translateY });
       }, 10);
 
@@ -76,11 +96,8 @@ export function ToolTip({ children, tip }: ToolTipProps) {
       {
         <div
           ref={toolTipRef}
-          className={styles.tool_tip}
+          className={styles.tooltip}
           style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
             visibility: showToolTip ? 'visible' : 'hidden',
             transform: `translate(${translate.x}, ${translate.y})`
           }}

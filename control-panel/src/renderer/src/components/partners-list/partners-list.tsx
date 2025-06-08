@@ -1,6 +1,7 @@
 import { useId, type Dispatch, type SetStateAction } from 'react';
 import { Checkbox } from '../checkbox';
 import { PartnersListItem } from '../partners-list-item';
+import { ToolTip } from '../tooltip';
 import type { Partner } from '../../model/partner';
 import deleteIcon from '/src/assets/icons/delete.png';
 import styles from './styles.module.scss';
@@ -71,17 +72,19 @@ export function PartnersList({
             />
             <label htmlFor={selectAllInputId}>Select All</label>
           </div>
-          <button
-            type="button"
-            onClick={deleteSelectedPartners}
-            className={styles.delete_button}
-          >
-            <img
-              src={deleteIcon}
-              alt="Delete selected partners"
-              className={styles.delete_icon}
-            />
-          </button>
+          <ToolTip tip="Delete" placement="left">
+            <button
+              type="button"
+              onClick={deleteSelectedPartners}
+              className={styles.delete_button}
+            >
+              <img
+                src={deleteIcon}
+                alt="Delete selected partners"
+                className={styles.delete_icon}
+              />
+            </button>
+          </ToolTip>
         </div>
       </li>
       {partners.map((p) => {

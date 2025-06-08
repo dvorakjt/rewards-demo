@@ -94,12 +94,11 @@ export function Partners() {
               ]}
               className={styles.header_control}
             />
-            <ToolTip tip="hello">
+            <ToolTip tip="Add partner" placement="below">
               <button
                 type="button"
                 className={styles.new_partner_button}
                 onClick={visitNewPartnerPage}
-                title="Add partner"
               >
                 <img src={newPartnerIcon} className={styles.new_partner_icon} />
               </button>

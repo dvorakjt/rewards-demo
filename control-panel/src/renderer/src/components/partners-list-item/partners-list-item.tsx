@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { useNavigate } from 'react-router';
 import { Checkbox } from '../checkbox';
+import { ToolTip } from '../tooltip';
 import type { Partner } from '@renderer/model/partner';
 import viewIcon from '/src/assets/icons/view.png';
 import editIcon from '/src/assets/icons/edit.png';
@@ -69,20 +70,24 @@ export function PartnersListItem({
           <label htmlFor={inputId}>{partner.name}</label>
         </div>
         <div>
-          <button type="button" onClick={editPartner}>
-            <img
-              src={editIcon}
-              alt={editIconAltText}
-              className={styles.action_icon}
-            />
-          </button>
-          <button type="button" onClick={viewPartner}>
-            <img
-              src={viewIcon}
-              alt={viewIconAltText}
-              className={styles.action_icon}
-            />
-          </button>
+          <ToolTip tip="Edit" placement="left">
+            <button type="button" onClick={editPartner}>
+              <img
+                src={editIcon}
+                alt={editIconAltText}
+                className={styles.action_icon}
+              />
+            </button>
+          </ToolTip>
+          <ToolTip tip="View" placement="right">
+            <button type="button" onClick={viewPartner}>
+              <img
+                src={viewIcon}
+                alt={viewIconAltText}
+                className={styles.action_icon}
+              />
+            </button>
+          </ToolTip>
         </div>
       </div>
     </li>
