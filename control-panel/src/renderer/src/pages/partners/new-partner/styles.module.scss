@@ -1,4 +1,37 @@
+@use '../../../styles/partials' as *;
+
 .page {
   display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: $color-yellow;
+  min-height: 100vh;
+  position: relative;
+}
+
+.content {
+  display: flex;
   justify-content: center;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 800px;
+  background-color: $color-white;
+  padding-top: 80px;
+}
+
+.breadcrumb {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-family: $font-family-lato;
+  font-weight: $font-weight-regular;
+  font-size: 20px;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: $color-black-text;
+  &:hover {
+    text-decoration: underline;
+  }
 }

@@ -46,8 +46,13 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       }
     }
 
+    let containerClassName = styles.container;
+    if (className) {
+      containerClassName += ' ' + className;
+    }
+
     return (
-      <div className={styles.container}>
+      <div className={containerClassName}>
         <input
           type="file"
           ref={fileInputRef}

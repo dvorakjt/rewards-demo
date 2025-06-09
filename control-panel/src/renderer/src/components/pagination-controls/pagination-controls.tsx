@@ -1,4 +1,11 @@
-import { useState, type FormEventHandler } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+  type FormEventHandler
+} from 'react';
 import { Button } from '../button';
 import backArrowEnabled from '/src/assets/icons/back-arrow-enabled.png';
 import backArrowDisabled from '/src/assets/icons/back-arrow-disabled.png';
@@ -63,6 +70,16 @@ export function PaginationControls({
   >('none');
   const showLeftGoTo = showGoToControl === 'left';
   const showRightGoTo = showGoToControl === 'right';
+  const leftGoToInputRef = useRef<HTMLInputElement>(null);
+  const rightGoToInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showGoToControl === 'left') {
+      leftGoToInputRef.current?.focus();
+    } else if (showGoToControl === 'right') {
+      rightGoToInputRef.current?.focus();
+    }
+  }, [showGoToControl]);
 
   return (
     <div className={styles.container}>
@@ -71,11 +88,13 @@ export function PaginationControls({
           lastPage={lastPage}
           goToPage={goToPage}
           visibility={showLeftGoTo ? 'visible' : 'hidden'}
+          ref={leftGoToInputRef}
         />
         <GoToPage
           lastPage={lastPage}
           goToPage={goToPage}
           visibility={showRightGoTo ? 'visible' : 'hidden'}
+          ref={rightGoToInputRef}
         />
       </div>
       <div className={styles.controls}>
@@ -158,9 +177,16 @@ interface GoToPageProps {
   goToPage: (page: number) => void;
 }
 
-function GoToPage({ visibility, lastPage, goToPage }: GoToPageProps) {
+const GoToPage = forwardRef<HTMLInputElement, GoToPageProps>(function GoToPage(
+  { visibility, lastPage, goToPage },
+  ref
+) {
   const [inputValue, setInputValue] = useState('');
   const [hasError, setHasError] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => inputRef.current!);
+
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     setHasError(false);
@@ -188,6 +214,7 @@ function GoToPage({ visibility, lastPage, goToPage }: GoToPageProps) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           aria-invalid={hasError}
+          ref={inputRef}
         />
         <span
           className={styles.error_message}
@@ -204,7 +231,7 @@ function GoToPage({ visibility, lastPage, goToPage }: GoToPageProps) {
       </Button>
     </form>
   );
-}
+});
 
 interface PageNumberButtonProps {
   page: number;
