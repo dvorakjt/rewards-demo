@@ -7,6 +7,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: Variant;
 }
 
+/**
+ * Renders a stylized button that can receive all of the props that a normal
+ * HTML button element would. Also accepts a `variant` prop which determines
+ * the color theme of the button.
+ *
+ * @param props - {@link ButtonProps}
+ */
 export function Button({
   variant,
   className: customClassName,

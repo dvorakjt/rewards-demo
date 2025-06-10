@@ -16,6 +16,14 @@ type FileInputProps = Omit<
   'type' | 'multiple'
 >;
 
+/**
+ * Renders a stylized input element of type "file" with a button that controls
+ * the input. The component accepts all of the props that an input of type
+ * "file" might receive, with the exception of `multiple`, and forwards them to
+ * the input. Can also accept a ref of type {@link HTMLInputElement}.
+ *
+ * @param props - {@link FileInputProps}
+ */
 export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
   function FileInput({ className, style, ...props }, ref) {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +38,11 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       setFileName(target.files);
     };
 
+    /**
+     * Clears the files from the input by setting the value of the input to an
+     * empty string, then calls `setFileName` with the updated file list in
+     * order to clear the file name displayed to the user.
+     */
     function clearFiles() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -37,6 +50,15 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       }
     }
 
+    /**
+     * Accepts a {@link FileList} or `null` and, if the list is not null and
+     * contains items, sets `selectedFile` to the name of the first file in the
+     * list, which should be the only file in the list since the input does not
+     * accept the `multiple` attribute. Otherwise, sets `selectedFile` to an
+     * empty string.
+     *
+     * @param files - An instance of {@link FileList} or `null`.
+     */
     function setFileName(files: FileList | null) {
       if (files && files.length > 0) {
         const fileName = files[0].name;

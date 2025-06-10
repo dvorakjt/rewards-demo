@@ -175,6 +175,17 @@ export function usePagination<T>(
   };
 }
 
+/**
+ * Determines if the arguments passed to `usePagination` are valid. Both
+ * `itemsPerPage` and `pagesPerView` must be positive integers.
+ *
+ * @param itemsPerPage - The number of items to display on each page.
+ * @param pagesPerView - The number of pages for which navigation buttons or
+ * links should be displayed.
+ *
+ * @throws An error if either `itemsPerPage` or `pagesPerView` is not a positive
+ * integer.
+ */
 function validateArgs(itemsPerPage: number, pagesPerView: number) {
   if (itemsPerPage <= 0 || !Number.isInteger(itemsPerPage)) {
     throw new Error('itemsPerPage must be a positive integer.');
@@ -185,6 +196,20 @@ function validateArgs(itemsPerPage: number, pagesPerView: number) {
   }
 }
 
+/**
+ * Calculates the initial state based on the total items in the list, the
+ * items per page, and the pages per view. If there are fewer pages in the
+ * entirety of the list than are allowed in one window, the visible page
+ * range ends after the last page.
+ *
+ * @param totalItems - The total number of items in the list.
+ * @param itemsPerPage - The number of items to display on each page.
+ * @param pagesPerView - The number of pages for which navigation buttons or
+ * links should be displayed.
+ *
+ * @returns A {@link PaginatedListState} object representing the initial state
+ * of the list.
+ */
 function initializeState(
   totalItems: number,
   itemsPerPage: number,
@@ -202,6 +227,22 @@ function initializeState(
   };
 }
 
+/**
+ * Returns an updated {@link PaginatedListState} object, taking into account the
+ * removal of items from the list. Preserves the current page unless the current
+ * page is now greater than the last page. Preserves the visible range if the
+ * end of the range is less than the last page, otherwise shifts the visible
+ * range back until its end is less than the last page.
+ *
+ * @param state - The current state of the list.
+ * @param totalItems - The new total number of items in the list.
+ * @param itemsPerPage - The number of items to display on each page.
+ * @param pagesPerView - The number of pages for which navigation buttons or
+ * links should be displayed.
+ *
+ * @returns A {@link PaginatedListState} object representing the state of the
+ * list after the removal of items.
+ */
 function handleItemRemoval(
   state: PaginatedListState,
   totalItems: number,
@@ -218,6 +259,21 @@ function handleItemRemoval(
   };
 }
 
+/**
+ * Returns an updated {@link PaginatedListState} object, taking into account the
+ * addition of items to the list. The current page is not changed, but the
+ * end of the visible range may be adjusted if it contained fewer pages than the
+ * desired pages per view because of the total number of pages in the list.
+ *
+ * @param state - The current state of the list.
+ * @param totalItems - The new total number of items in the list.
+ * @param itemsPerPage - The number of items to display on each page.
+ * @param pagesPerView - The number of pages for which navigation buttons or
+ * links should be displayed.
+ *
+ * @returns A {@link PaginatedListState} object representing the state of the
+ * list after the addition of items.
+ */
 function handleItemAddition(
   state: PaginatedListState,
   totalItems: number,
@@ -235,14 +291,49 @@ function handleItemAddition(
   };
 }
 
+/**
+ * Calculates the last page in the list (min. 1) based on the total number of
+ * items in the list and the items per page.
+ *
+ * @param totalItems - The total number of items in the list.
+ * @param itemsPerPage - The number of items to display on each page.
+ * @returns The last page in the list.
+ */
 function calculateLastPage(totalItems: number, itemsPerPage: number) {
   return Math.max(Math.ceil(totalItems / itemsPerPage), 1);
 }
 
+/**
+ * Calculates the first page that is outside the currently visible range of
+ * pages.
+ *
+ * @remarks
+ * If `currentPage` is 1 and `pagesPerView` is 5, the user should see
+ * navigation buttons, links, etc. for pages 1 through 5. Therefore, in that case,
+ * this function would return 6.
+ *
+ * @param currentPage - The page that is currently visible to the user.
+ * @param pagesPerView - The number of pages for which navigation buttons or
+ * links should be displayed.
+ * @returns The first page outside of the range of pages for which navigation
+ * buttons or links should be rendered.
+ */
 function calculateNextWindow(currentPage: number, pagesPerView: number) {
   return currentPage + pagesPerView;
 }
 
+/**
+ * Calculates the range of indices of items that the should be displayed to the
+ * user based on the current page and the number of items per page.
+ *
+ * @param currentPage - The current page of the list. Pages are numbered
+ * beginning with 1.
+ * @param itemsPerPage - The number of items to display on each page.
+ * @returns
+ * A tuple containing the starting and ending indices of the items that
+ * should be displayed to the user based on the current page and the items per
+ * page. The item at the ending index should not be displayed to the user.
+ */
 function calculateVisibleItemsRange(currentPage: number, itemsPerPage: number) {
   const start = (currentPage - 1) * itemsPerPage;
   const end = start + itemsPerPage;
