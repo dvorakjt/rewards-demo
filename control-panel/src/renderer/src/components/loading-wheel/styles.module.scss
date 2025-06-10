@@ -1,0 +1,48 @@
+@use '../../styles/partials' as *;
+
+.transparent_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(58, 58, 58, 0.5);
+  animation: fade-in 200ms linear;
+  z-index: 100;
+}
+
+.spinner_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fade-in 200ms linear;
+  z-index: 100;
+}
+
+.spinner {
+  margin-left: $navigation-menu-width;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    rotate: 0;
+  }
+  to {
+    rotate: 360deg;
+  }
+}
