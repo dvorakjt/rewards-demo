@@ -25,6 +25,8 @@
 }
 
 .spinner {
+  width: 82px;
+  height: 82px;
   margin-left: $navigation-menu-width;
   animation: spin 1s linear infinite;
 }

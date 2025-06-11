@@ -6,6 +6,9 @@ import type { Partner } from '../../model/partner';
 import deleteIcon from '/src/assets/icons/delete.png';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link PartnersList} component.
+ */
 interface PartnersListProps {
   /**
    * An array of partners to render.
@@ -72,7 +75,7 @@ export function PartnersList({
             />
             <label htmlFor={selectAllInputId}>Select All</label>
           </div>
-          <ToolTip tip="Delete" placement="left">
+          <ToolTip text="Delete" placement="left">
             <button
               type="button"
               onClick={deleteSelectedPartners}

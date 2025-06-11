@@ -94,7 +94,7 @@ export function Partners() {
               ]}
               className={styles.header_control}
             />
-            <ToolTip tip="Add partner" placement="below">
+            <ToolTip text="Add partner" placement="below">
               <button
                 type="button"
                 className={styles.new_partner_button}

@@ -4,5 +4,5 @@ export interface NewPartnerData {
   logo: File;
   description: string;
   website?: string;
-  locations: File;
+  locations?: File | null;
 }

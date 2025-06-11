@@ -1,4 +1,4 @@
-import { useRef, useId, useEffect, type CSSProperties } from 'react';
+import { useRef, useEffect, type CSSProperties } from 'react';
 import {
   useFocusEvents,
   useMultiPipe,
@@ -11,6 +11,9 @@ import {
 } from 'fully-formed';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link TextArea} component.
+ */
 interface TextAreaProps {
   /**
    * A {@link Field} that will control the state of the textarea.
@@ -41,14 +44,16 @@ interface TextAreaProps {
  * Renders an HTML textarea element whose value and appearance are controlled by
  * the state of a {@link Field}.
  *
- * @param props - {@link TextAreaProps}
- *
  * @remarks
  * If the provide field is invalid, the returned textarea element will appear
  * invalid once the user has interacted with it.
  *
  * If `groups` are provided, the textarea will appear invalid if any of those
  * groups' validators have failed and the user has interacted with it.
+ *
+ * The textarea will grow in size to accomodate user input.
+ *
+ * @param props - {@link TextAreaProps}
  */
 export function TextArea({
   field,
@@ -64,6 +69,7 @@ export function TextArea({
 }: TextAreaProps) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { value, onChange } = useUserInput(field);
+
   const className = useMultiPipe([field, ...groups], (states) => {
     const classNames = [styles.textarea];
     const fieldState = states[0];
@@ -112,20 +118,6 @@ export function TextArea({
     );
   });
 
-  const warningMessage = useMultiPipe([field, ...groups], (states) => {
-    const validity = ValidityUtils.minValidity(states);
-    const fieldState = states[0];
-
-    return ValidityUtils.isCaution(validity) &&
-      (fieldState.hasBeenModified ||
-        fieldState.hasBeenBlurred ||
-        fieldState.submitted)
-      ? 'The value of this field could not be confirmed. Please verify that it is correct.'
-      : undefined;
-  });
-
-  const warningMessageId = useId();
-
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = '43px';
@@ -135,33 +127,21 @@ export function TextArea({
   }, [value]);
 
   return (
-    <>
-      <textarea
-        name={field.name}
-        id={field.id}
-        ref={textAreaRef}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        maxLength={maxLength}
-        aria-required={ariaRequired}
-        aria-describedby={
-          ariaDescribedBy
-            ? `${ariaDescribedBy} ${warningMessageId}`
-            : warningMessageId
-        }
-        aria-invalid={ariaInvalid}
-        {...useFocusEvents(field)}
-        className={className}
-        style={style}
-      />
-      <span
-        style={{ position: 'fixed', visibility: 'hidden' }}
-        id={warningMessageId}
-      >
-        {warningMessage}
-      </span>
-    </>
+    <textarea
+      name={field.name}
+      id={field.id}
+      ref={textAreaRef}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      disabled={disabled}
+      maxLength={maxLength}
+      aria-required={ariaRequired}
+      aria-describedby={ariaDescribedBy}
+      aria-invalid={ariaInvalid}
+      {...useFocusEvents(field)}
+      className={className}
+      style={style}
+    />
   );
 }

@@ -13,6 +13,9 @@ import forwardArrowEnabled from '/src/assets/icons/forward-arrow-enabled.png';
 import forwardArrowDisabled from '/src/assets/icons/forward-arrow-disabled.png';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link PaginationControls} component.
+ */
 interface PaginationControlsProps {
   /**
    * The currently visible page.
@@ -32,17 +35,17 @@ interface PaginationControlsProps {
   visiblePageRange: [number, number];
   /**
    * A function that navigates to the next page in the paginated list and may
-   * alter the visiblePageRange.
+   * alter the visible page range.
    */
   goToNextPage: () => void;
   /**
    * A function that navigates to the previous page in the paginated list and
-   * may alter the visiblePageRange.
+   * may alter the visible page range.
    */
   goToPreviousPage: () => void;
   /**
    * A function that navigates to a given page, provided that page exists, and
-   * may alter the visiblePageRange.
+   * may alter the visible page range.
    */
   goToPage: (page: number) => void;
 }
@@ -132,7 +135,7 @@ export function PaginationControls({
               <PageNumberButton
                 page={i}
                 goToPage={goToPage}
-                isActive={currentPage === i}
+                isCurrentPage={currentPage === i}
               />
             );
           }
@@ -171,12 +174,30 @@ export function PaginationControls({
   );
 }
 
+/**
+ * Props accepted by the {@link GoToPage} component.
+ */
 interface GoToPageProps {
+  /**
+   * Hides or shows the element while ensuring that the surrounding layout does
+   * not change.
+   */
   visibility: 'visible' | 'hidden';
+  /**
+   * The last page in the paginated list.
+   */
   lastPage: number;
+  /**
+   * A function that takes the user to the specified page.
+   */
   goToPage: (page: number) => void;
 }
 
+/**
+ * Renders a form with one input and a submit button that, upon submit, takes
+ * the user to the page they entered into the input. Displays an error message
+ * if the specified page does not exist.
+ */
 const GoToPage = forwardRef<HTMLInputElement, GoToPageProps>(function GoToPage(
   { visibility, lastPage, goToPage },
   ref
@@ -233,13 +254,32 @@ const GoToPage = forwardRef<HTMLInputElement, GoToPageProps>(function GoToPage(
   );
 });
 
+/**
+ * Props accepted by the {@link PageNumberButton} component.
+ */
 interface PageNumberButtonProps {
+  /**
+   * The page number to link to and display.
+   */
   page: number;
+  /**
+   * A function that navigates to a given page.
+   */ /**
+   * Whether or not the button displays the page number of the current page.
+   */
+  isCurrentPage?: boolean;
   goToPage: (page: number) => void;
-  isActive?: boolean;
 }
 
-function PageNumberButton({ page, isActive, goToPage }: PageNumberButtonProps) {
+/**
+ * Renders a button containing the number of a page within a paginated list that
+ * the user will be taken to when the button is clicked.
+ */
+function PageNumberButton({
+  page,
+  isCurrentPage,
+  goToPage
+}: PageNumberButtonProps) {
   return (
     <button
       type="button"
@@ -247,7 +287,9 @@ function PageNumberButton({ page, isActive, goToPage }: PageNumberButtonProps) {
       className={styles.control_button}
     >
       <span
-        className={isActive ? styles.current_page_number : styles.page_number}
+        className={
+          isCurrentPage ? styles.current_page_number : styles.page_number
+        }
         style={{ marginRight: '15px' }}
       >
         {page}

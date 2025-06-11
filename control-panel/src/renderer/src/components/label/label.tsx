@@ -20,12 +20,11 @@ type LabelProps = {
 };
 
 /**
- * Renders an HTML label element whose `htmlFor` property is assigned the id
- * of the {@link Field} it receives.
+ * Renders an HTML label element whose `htmlFor` property is assigned the id of
+ * the {@link Field} it receives.
  *
- * If the `variant` prop is set to floating,
- * the label will be positioned inside the corresponding input element until the
- * user has interacted with it.
+ * If the `variant` prop is set to floating, the label will be positioned inside
+ * the corresponding input element until the user has interacted with it.
  *
  * @param props - {@link LabelProps}
  * @returns An HTML label element.

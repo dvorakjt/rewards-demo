@@ -6,13 +6,7 @@ export function LoadingWheel() {
     <>
       <div className={styles.transparent_overlay}></div>
       <div className={styles.spinner_container}>
-        <img
-          src={spinner}
-          width={82}
-          height={82}
-          alt="loading"
-          className={styles.spinner}
-        />
+        <img src={spinner} alt="loading" className={styles.spinner} />
       </div>
     </>
   );

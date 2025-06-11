@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   type MouseEventHandler,
   type DragEventHandler,
+  type DragEvent,
   type CSSProperties
 } from 'react';
 import uploadImage from '/src/assets/icons/upload-image.png';
@@ -35,12 +36,12 @@ interface ImageInputProps {
   thumbnailAlt: string;
   /**
    * Applies an additional CSS class to the outer container rendered by the
-   * component. Useful for applying margins.
+   * component. Useful for applying things like margins.
    */
   containerClassName?: string;
   /**
    * Applies CSS styles to the outer container rendered by the component. Useful
-   * for applying margins.
+   * for applying things like margins.
    */
   containerStyle?: CSSProperties;
 }
@@ -71,26 +72,30 @@ export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
 
     const onDragOver: DragEventHandler = (e) => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'copy';
+      e.dataTransfer.dropEffect = canDropFiles(e) ? 'copy' : 'none';
     };
 
     const onDrop: DragEventHandler = (e) => {
       e.preventDefault();
-      if (canDropFiles(e.dataTransfer.files)) {
+      if (canDropFiles(e)) {
         fileInputRef.current!.files = e.dataTransfer.files;
         displayThumbnail(fileInputRef.current!.files);
       }
     };
-
     /**
      * Determines whether or not the user can drop files they are currently
      * dragging. Only one file can be dropped and it must be an image.
      *
-     * @param files - The {@link FileList} to evaluate.
-     * @returns `true` if the user is permitted to drop the files they are
+     * @param event - The {@link DragEvent} to validate.
+     * @returns `true` if the user is permitted to drop the file(s) they are
      * dragging, `false` otherwise.
      */
-    function canDropFiles(files: FileList) {
+    function canDropFiles(event: DragEvent) {
+      const files =
+        event.type === 'drop'
+          ? event.dataTransfer.files
+          : event.dataTransfer.items;
+
       return files.length === 1 && files[0].type.startsWith('image/');
     }
 

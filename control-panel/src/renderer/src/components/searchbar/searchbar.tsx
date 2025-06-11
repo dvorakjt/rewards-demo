@@ -2,6 +2,9 @@ import type { CSSProperties } from 'react';
 import magnifyingGlass from '/src/assets/icons/magnifying-glass.png';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link SearchBar} component.
+ */
 interface SearchBarProps {
   /**
    * The current value to be displayed in the searchbar.

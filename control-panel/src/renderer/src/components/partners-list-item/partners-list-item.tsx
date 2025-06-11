@@ -7,6 +7,9 @@ import viewIcon from '/src/assets/icons/view.png';
 import editIcon from '/src/assets/icons/edit.png';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link PartnersListItem} component.
+ */
 interface PartnersListItemProps {
   /**
    * The partner whose information is to be displayed in the list item.
@@ -70,7 +73,7 @@ export function PartnersListItem({
           <label htmlFor={inputId}>{partner.name}</label>
         </div>
         <div>
-          <ToolTip tip="Edit" placement="left">
+          <ToolTip text="Edit" placement="left">
             <button type="button" onClick={editPartner}>
               <img
                 src={editIcon}
@@ -79,7 +82,7 @@ export function PartnersListItem({
               />
             </button>
           </ToolTip>
-          <ToolTip tip="View" placement="right">
+          <ToolTip text="View" placement="right">
             <button type="button" onClick={viewPartner}>
               <img
                 src={viewIcon}

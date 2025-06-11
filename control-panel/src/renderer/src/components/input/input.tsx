@@ -1,4 +1,3 @@
-import { useId, type CSSProperties, type ChangeEventHandler } from 'react';
 import {
   useFocusEvents,
   useMultiPipe,
@@ -9,8 +8,12 @@ import {
   type Group,
   useValue
 } from 'fully-formed';
+import type { CSSProperties, ChangeEventHandler } from 'react';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link Input} component.
+ */
 interface InputProps {
   /**
    * A {@link Field} that will control the state of the input.
@@ -21,6 +24,9 @@ interface InputProps {
    * executed and returned an invalid result, the input will appear invalid.
    */
   groups?: IGroup[];
+  /**
+   * The `type` attribute of the input.
+   */
   type: string;
   /**
    * If true, the placeholder and value text will be opaque even before the user
@@ -29,6 +35,11 @@ interface InputProps {
    * input with a floating label.
    */
   showText?: boolean;
+  /**
+   * A regular expression or an array of characters that the user is allowed to
+   * type into the input. All characters are allowed by default.
+   */
+  allowedCharacters?: RegExp | string[];
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
@@ -38,14 +49,11 @@ interface InputProps {
   style?: CSSProperties;
   ['aria-required']?: boolean;
   ['aria-describedby']?: string;
-  allowedCharacters?: RegExp | string[];
 }
 
 /**
  * Renders an HTML input element whose value and appearance are controlled by
  * the state of a {@link Field}.
- *
- * @param props - {@link InputProps}
  *
  * @remarks
  * If the provide field is invalid, the returned input element will appear
@@ -53,6 +61,8 @@ interface InputProps {
  *
  * If `groups` are provided, the field will appear invalid if any of those
  * groups' validators have failed and the user has interacted with it.
+ *
+ * @param props - {@link InputProps}
  */
 export function Input({
   field,
@@ -71,6 +81,7 @@ export function Input({
   allowedCharacters
 }: InputProps) {
   const value = useValue(field);
+
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (allowedCharacters) {
       const characters = e.target.value.split('');
@@ -85,6 +96,7 @@ export function Input({
 
     field.setValue(e.target.value);
   };
+
   const className = useMultiPipe([field, ...groups], (states) => {
     const classNames = [styles.input];
     const fieldState = states[0];
@@ -107,9 +119,7 @@ export function Input({
       fieldState.hasBeenBlurred ||
       fieldState.submitted
     ) {
-      if (ValidityUtils.isCaution(validity)) {
-        classNames.push(styles.caution);
-      } else if (ValidityUtils.isInvalid(validity)) {
+      if (ValidityUtils.isInvalid(validity)) {
         classNames.push(styles.invalid);
       }
     }
@@ -133,50 +143,24 @@ export function Input({
     );
   });
 
-  const warningMessage = useMultiPipe([field, ...groups], (states) => {
-    const validity = ValidityUtils.minValidity(states);
-    const fieldState = states[0];
-
-    return ValidityUtils.isCaution(validity) &&
-      (fieldState.hasBeenModified ||
-        fieldState.hasBeenBlurred ||
-        fieldState.submitted)
-      ? 'The value of this field could not be confirmed. Please verify that it is correct.'
-      : undefined;
-  });
-
-  const warningMessageId = useId();
-
   return (
-    <>
-      <input
-        name={field.name}
-        id={field.id}
-        type={type}
-        placeholder={placeholder}
-        disabled={disabled}
-        autoComplete={autoComplete}
-        maxLength={maxLength}
-        max={max}
-        aria-required={ariaRequired}
-        aria-describedby={
-          ariaDescribedBy
-            ? `${ariaDescribedBy} ${warningMessageId}`
-            : warningMessageId
-        }
-        aria-invalid={ariaInvalid}
-        value={value}
-        onChange={onChange}
-        {...useFocusEvents(field)}
-        className={className}
-        style={style}
-      />
-      <span
-        style={{ position: 'fixed', visibility: 'hidden' }}
-        id={warningMessageId}
-      >
-        {warningMessage}
-      </span>
-    </>
+    <input
+      name={field.name}
+      id={field.id}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      autoComplete={autoComplete}
+      maxLength={maxLength}
+      max={max}
+      aria-required={ariaRequired}
+      aria-describedby={ariaDescribedBy}
+      aria-invalid={ariaInvalid}
+      value={value}
+      onChange={onChange}
+      {...useFocusEvents(field)}
+      className={className}
+      style={style}
+    />
   );
 }

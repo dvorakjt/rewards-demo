@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link NavigationLink} component.
+ */
 interface NavigationLinkProps {
   /**
    * The path that the component will link to.

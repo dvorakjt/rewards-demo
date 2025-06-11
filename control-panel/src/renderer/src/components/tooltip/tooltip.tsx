@@ -3,13 +3,36 @@ import styles from './styles.module.scss';
 
 type ChildElement = JSX.Element | string | number | boolean | null | undefined;
 
+/**
+ * Props accepted by the {@link ToolTip} component.
+ */
 interface ToolTipProps {
-  tip: string;
+  /**
+   * The text to display to the user when the tooltip is visible.
+   */
+  text: string;
+  /**
+   * The child element that the tooltip describes.
+   */
   children: ChildElement;
+  /**
+   * The placement of the tooltip relative to the child element.
+   */
   placement: 'above' | 'below' | 'left' | 'right';
 }
 
-export function ToolTip({ children, tip, placement }: ToolTipProps) {
+/**
+ * Renders a stylized tooltip next to the child element. The tooltip becomes
+ * visible when the user hovers over the child element. The position of the
+ * tooltip relative to the child element can be set with the `placement` prop.
+ *
+ * @remarks
+ * The `children` prop of this component is limited to exactly one child
+ * element. Tooltips should not enclose other tooltips.
+ *
+ * @param props {@link ToolTipProps}
+ */
+export function ToolTip({ children, text, placement }: ToolTipProps) {
   const toolTipRef = useRef<HTMLDivElement | null>(null);
   const [showToolTip, setShowToolTip] = useState(false);
   const [translate, setTranslate] = useState<{ x: string; y: string }>({
@@ -102,7 +125,7 @@ export function ToolTip({ children, tip, placement }: ToolTipProps) {
             transform: `translate(${translate.x}, ${translate.y})`
           }}
         >
-          {tip}
+          {text}
         </div>
       }
     </>

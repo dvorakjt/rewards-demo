@@ -1,42 +1,66 @@
 import { Label } from '../label';
 import { Input } from '../input';
 import { Messages } from '../messages';
-import {
-  useMultiPipe,
-  usePipe,
-  ValidityUtils,
-  type FieldOfType,
-  type IGroup
-} from 'fully-formed';
+import { usePipe, type FieldOfType, type IGroup } from 'fully-formed';
 import type { CSSProperties, ReactNode } from 'react';
-import warningIcon from '/src/assets/icons/warning-icon.png';
 import styles from './styles.module.scss';
 
+/**
+ * Props accepted by the {@link InputGroup} component.
+ */
 type InputGroupProps = {
+  /**
+   * A {@link Field} that will control the state of the input, label, and
+   * messages.
+   */
   field: FieldOfType<string>;
+  /**
+   * An array of {@link Group}s. If these groups' validators have
+   * executed and returned an invalid result, the input will appear invalid.
+   */
   groups?: IGroup[];
+  /**
+   * The `type` attribute of the input.
+   */
   type: string;
+  /**
+   * If `'floating'`, the label will be positioned inside the input element
+   * until the user interacts with it, at which point it will float up above
+   * the input element.
+   */
   labelVariant: 'floating' | 'stationary';
+  /**
+   * The React element, text, etc. to render inside the label.
+   */
   labelContent: ReactNode;
+  /**
+   * Applies an additional CSS class to the outer container rendered by the
+   * component. Useful for applying things like margins.
+   */
   containerClassName?: string;
+  /**
+   * Applies CSS styles to the outer container rendered by the component. Useful
+   * for applying things like margins.
+   */
   containerStyle?: CSSProperties;
+  /**
+   * A regular expression or an array of characters that the user is allowed to
+   * type into the input. All characters are allowed by default.
+   */
+  allowedCharacters?: RegExp | string[];
   placeholder?: string;
   disabled?: boolean;
   autoComplete?: string;
   maxLength?: number;
   max?: string;
   ['aria-required']?: boolean;
-  allowedCharacters?: RegExp | string[];
 };
 
 /**
  * Renders a {@link Label}, {@link Input} and {@link Messages} inside a
  * container.
  *
- * @param props - {@link InputGroupProps}
- *
  * @remarks
- *
  * The `htmlFor` attribute is set to the `id` of the provided field, and
  * the `aria-describedby` attribute of the input is set to the id provided to
  * the messages component, making the component optimized for screen readers.
@@ -46,6 +70,8 @@ type InputGroupProps = {
  *
  * The container can be styled, which facilitates changing the width of the
  * input, etc.
+ *
+ * @param props - {@link InputGroupProps}
  */
 export function InputGroup({
   field,
@@ -68,18 +94,6 @@ export function InputGroup({
     return !(state.hasBeenModified || state.hasBeenBlurred || state.submitted);
   });
 
-  const showWarningIcon = useMultiPipe([field, ...groups], (states) => {
-    const validity = ValidityUtils.minValidity(states);
-    const fieldState = states[0];
-
-    return (
-      ValidityUtils.isCaution(validity) &&
-      (fieldState.hasBeenModified ||
-        fieldState.hasBeenBlurred ||
-        fieldState.submitted)
-    );
-  });
-
   return (
     <div className={containerClassName} style={containerStyle}>
       <Label field={field} variant={labelVariant}>
@@ -100,13 +114,6 @@ export function InputGroup({
         allowedCharacters={allowedCharacters}
       />
       <div className={styles.messages_container}>
-        {showWarningIcon && (
-          <img
-            src={warningIcon}
-            alt="Warning Icon"
-            className={styles.warning_icon}
-          />
-        )}
         <Messages
           messageBearers={[field, ...groups]}
           id={messagesId}
