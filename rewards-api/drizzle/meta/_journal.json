@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1749766634157,
+      "tag": "0000_create-extension-postgis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1749847542721,
+      "tag": "0001_initial-schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749847609607,
+      "tag": "0002_add-srid-to-coordinates",
+      "breakpoints": true
+    }
+  ]
+}
