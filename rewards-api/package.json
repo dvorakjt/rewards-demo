@@ -1,5 +1,5 @@
 {
-  "name": "rewards-api",
+  "name": "rewards-api-mikroorm",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,13 +9,18 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.44.2",
-    "pg": "^8.16.0"
-  },
   "devDependencies": {
-    "@types/pg": "^8.15.4",
-    "drizzle-kit": "^0.31.1"
+    "@mikro-orm/cli": "^6.4.16",
+    "@mikro-orm/reflection": "^6.4.16",
+    "@types/node": "^24.0.1",
+    "@types/pluralize": "^0.0.33",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@mikro-orm/core": "^6.4.16",
+    "@mikro-orm/migrations": "^6.4.16",
+    "@mikro-orm/postgresql": "^6.4.16",
+    "dotenv": "^16.5.0",
+    "pluralize": "^8.0.0"
   }
 }
