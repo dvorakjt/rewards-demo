@@ -20,5 +20,8 @@ export class Reward implements IReward {
   longDescription?: string;
 
   @Property()
+  expirationDate?: Date;
+
+  @Property()
   hash!: string;
 }

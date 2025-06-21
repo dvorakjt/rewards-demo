@@ -6,5 +6,6 @@ export interface IReward {
   shortDescription: string;
   redemptionForums: RedemptionForum[];
   longDescription?: string;
+  expirationDate?: Date;
   hash: string;
 }

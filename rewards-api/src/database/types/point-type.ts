@@ -1,6 +1,15 @@
 import { Type } from "@mikro-orm/core";
 import type { IPoint } from "../../model/i-point";
 
+/**
+ * A class that converts points from their format within the database into
+ * instances of {@link IPoint} and vice versa.
+ *
+ * @remarks
+ * It is important to note that when represented as Well-Known Text (WKT), the
+ * format used by the database for representing points as text, longitude comes
+ * before latitude.
+ */
 export class PointType extends Type<IPoint, string> {
   /**
    * The Spatial Reference Identifier for latitude and longitude coordinates.
@@ -8,14 +17,15 @@ export class PointType extends Type<IPoint, string> {
   private static readonly SRID = 4326;
 
   convertToDatabaseValue(value: IPoint): string {
-    return `point(${value.latitude} ${value.longitude})`;
+    return `point(${value.longitude} ${value.latitude})`;
   }
 
   convertToJSValue(value: string): IPoint {
+    console.log(value);
     const m = value.match(/point\((-?\d+(\.\d+)?) (-?\d+(\.\d+)?)\)/i)!;
     return {
-      latitude: Number(m[1]),
-      longitude: Number(m[3]),
+      longitude: Number(m[1]),
+      latitude: Number(m[3]),
     };
   }
 

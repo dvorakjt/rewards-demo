@@ -19,6 +19,9 @@ export class ContextualizedReward implements IContextualizedReward {
   longDescription?: string;
 
   @Property()
+  expirationDate?: Date;
+
+  @Property()
   partnerId!: string;
 
   @Property()
@@ -34,5 +37,8 @@ export class ContextualizedReward implements IContextualizedReward {
   partnerWhy8by8?: string;
 
   @Property({ type: PointType })
-  nearestPartnerLocation?: IPoint;
+  nearestLocationCoordinates?: IPoint;
+
+  @Property()
+  distanceToNearestLocation?: number;
 }

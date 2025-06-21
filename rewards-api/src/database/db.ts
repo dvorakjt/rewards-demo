@@ -3,9 +3,10 @@ import { MikroORM, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Partner } from "./entities/partner";
 import { Location } from "./entities/location";
 import { Reward } from "./entities/reward";
+import { ContextualizedReward } from "./entities/contextualized-reward";
 
 const orm = MikroORM.initSync({
-  entities: [Partner, Location, Reward],
+  entities: [Partner, Location, Reward, ContextualizedReward],
   dbName: process.env.DB_NAME,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),

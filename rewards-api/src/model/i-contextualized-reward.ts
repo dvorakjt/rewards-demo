@@ -6,10 +6,12 @@ export interface IContextualizedReward {
   shortDescription: string;
   redemptionForums: RedemptionForum[];
   longDescription?: string;
+  expirationDate?: Date;
   partnerId: string;
   partnerName: string;
   partnerDescription: string;
   partnerWebsite?: string;
   partnerWhy8by8?: string;
-  nearestPartnerLocation?: IPoint;
+  nearestLocationCoordinates?: IPoint;
+  distanceToNearestLocation?: number;
 }
