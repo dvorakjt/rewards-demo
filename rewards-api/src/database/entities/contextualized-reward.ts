@@ -1,4 +1,11 @@
-import { Entity, PrimaryKey, Property, UuidType, Enum } from "@mikro-orm/core";
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  UuidType,
+  Enum,
+  TextType,
+} from "@mikro-orm/core";
 import { PointType } from "../types/point-type";
 import { RedemptionForum } from "../../model/redemption-forum";
 import type { IContextualizedReward } from "../../model/i-contextualized-reward";
@@ -15,7 +22,7 @@ export class ContextualizedReward implements IContextualizedReward {
   @Enum({ items: () => RedemptionForum, array: true })
   redemptionForums!: RedemptionForum[];
 
-  @Property()
+  @Property({ type: TextType })
   longDescription?: string;
 
   @Property()
@@ -27,13 +34,13 @@ export class ContextualizedReward implements IContextualizedReward {
   @Property()
   partnerName!: string;
 
-  @Property()
+  @Property({ type: TextType })
   partnerDescription!: string;
 
   @Property()
   partnerWebsite?: string;
 
-  @Property()
+  @Property({ type: TextType })
   partnerWhy8by8?: string;
 
   @Property({ type: PointType })

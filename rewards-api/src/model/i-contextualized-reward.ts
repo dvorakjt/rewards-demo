@@ -1,38 +1,7 @@
-import { RedemptionForum } from "./redemption-forum";
+import type { IReward } from "./i-reward";
 import type { IPoint } from "./i-point";
 
-export interface IContextualizedReward {
-  /**
-   * A UUID, unique to each reward.
-   */
-  id: string;
-  /**
-   * A short description of the reward, e.g. "One Free Coffee"
-   */
-  shortDescription: string;
-  /**
-   * A list indicating whether the reward can be redeemed in-store, online,
-   * or both.
-   */
-  redemptionForums: RedemptionForum[];
-  /**
-   * A more complete description of the reward, which could include details
-   * such as terms and conditions, etc.
-   */
-  longDescription?: string;
-  /**
-   * The date from which the reward will no longer be offered. If undefined,
-   * the reward will be available indefinitely, unless otherwise instructed by
-   * the partner.
-   */
-  expirationDate?: Date;
-  /**
-   * The id of the partner offering this reward.
-   */
-  partnerId: string;
-  /**
-   * The name of the partner offering this reward.
-   */
+export interface IContextualizedReward extends Omit<IReward, "hash"> {
   partnerName: string;
   /**
    * The description of the partner offering this reward.
