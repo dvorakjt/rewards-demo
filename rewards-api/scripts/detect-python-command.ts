@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 
 export function detectPythonCommand() {
-  const possibleCommands = ["python3", "python", "py"];
+  const possibleCommands = ["py", "python3", "python"];
   for (const command of possibleCommands) {
     try {
       execSync(`${command} --version`, { stdio: "ignore" });

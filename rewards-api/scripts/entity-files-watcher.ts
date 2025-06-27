@@ -5,6 +5,24 @@ import { z } from "zod";
 import { watch } from "./watch";
 import type { IPartner } from "../src/model/i-partner";
 
+/*
+  Notes:
+  1. filepaths should be configurable for testing
+  2. things to test:
+     - creating a partner directory
+     - creating files within the partner directory
+     - renaming a partner directory (with valid files)
+     - renaming a partner directory (with invalid files)
+     - modifying files in a partner directory
+     - moving a partner directory out of the partners folder
+     - moving a partner directory into another partner directory
+     - moving a valid partner directory into partners from outside
+     - moving an invalid partner directory into partners from outside
+     - deleting a valid partner directory
+     - deleting an invalid partner directory
+     - deleting files from a valid partner directory
+     - deleting files from an invalid partner directory
+*/
 export class EntityFilesWatcher {
   pathToPartnersDirectory = path.join(__dirname, "../src/partners");
   pathToRewardsDirectory = path.join(__dirname, "../src/rewards");
@@ -16,46 +34,71 @@ export class EntityFilesWatcher {
 
   watchEntityFiles() {
     this.watchPartnersDirectory();
-    this.watchRewardsDirectory();
   }
 
   private watchPartnersDirectory() {
-    watch(
-      this.pathToPartnersDirectory,
-      (eventType, sourcePath, destinationPath) => {
-        const relativePath = sourcePath.slice(
-          this.pathToPartnersDirectory.length
-        );
-        if (!relativePath) return;
-
-        switch (eventType) {
-          case "modified":
-          case "moved":
-          case "deleted":
-            console.log(eventType, relativePath, typeof destinationPath);
-        }
-      }
-    );
-
-    function getPartnerIdFromFileName(filename: string) {
-      const separatorIndex = filename.indexOf(path.sep);
-      if (separatorIndex > 0) {
-        return filename.slice(0, separatorIndex);
+    watch(this.pathToPartnersDirectory, (_, sourcePath, destinationPath) => {
+      if (sourcePath.startsWith(this.pathToPartnersDirectory)) {
+        this.processPartner(sourcePath);
       }
 
-      return filename;
-    }
+      if (destinationPath.startsWith(this.pathToPartnersDirectory)) {
+        this.processPartner(destinationPath);
+      }
+    });
   }
 
-  private watchRewardsDirectory() {}
+  private processPartner(filepath: string) {
+    const changeSet = this.readChangeSet();
+    const pathToPartnersDirectoryWithTrailingSeparator =
+      this.pathToPartnersDirectory + path.sep;
 
-  // must discover rewards
-  private readPartnerData(partnerId: string) {
+    let indexOfNextSeparator = filepath.indexOf(
+      path.sep,
+      pathToPartnersDirectoryWithTrailingSeparator.length
+    );
+
+    if (indexOfNextSeparator === -1) {
+      indexOfNextSeparator = filepath.length;
+    }
+
+    const partnerId = filepath.slice(
+      pathToPartnersDirectoryWithTrailingSeparator.length,
+      indexOfNextSeparator
+    );
+
+    if (!partnerId) {
+      return;
+    }
+
     const pathToPartnerDirectory = path.join(
       this.pathToPartnersDirectory,
       partnerId
     );
 
+    const partnerData = this.readPartnerData(pathToPartnerDirectory);
+
+    if (partnerData) {
+      changeSet.partners[partnerId] = {};
+      const partnerHash = this.hashEntity(partnerData);
+      changeSet.partners[partnerId].hash = partnerHash;
+      const pathToLocationsFile = path.join(
+        pathToPartnerDirectory,
+        "locations.csv"
+      );
+      if (fs.existsSync(pathToLocationsFile)) {
+        const locations = fs.readFileSync(pathToLocationsFile, "utf-8");
+        const locationsHash = this.hashString(locations);
+        changeSet.partners[partnerId].locationsHash = locationsHash;
+      }
+    } else {
+      delete changeSet.partners[partnerId];
+    }
+
+    this.updateChangeSet(changeSet);
+  }
+
+  private readPartnerData(pathToPartnerDirectory: string) {
     const pathToPartnerData = path.join(pathToPartnerDirectory, "data.ts");
 
     const pathToPartnerDescription = path.join(
@@ -69,7 +112,7 @@ export class EntityFilesWatcher {
     ) {
       try {
         delete require.cache[require.resolve(pathToPartnerData)];
-        const { partnerData: rawPartnerData } = require(pathToPartnerData);
+        const { default: rawPartnerData } = require(pathToPartnerData);
         const parsedPartnerData = this.partnerDataSchema.parse(
           rawPartnerData
         ) as Partial<IPartner>;
@@ -87,41 +130,6 @@ export class EntityFilesWatcher {
     }
 
     return null;
-  }
-
-  private handlePartnerCreationOrUpdate(
-    partnerId: string,
-    partnerData: Partial<IPartner>
-  ) {
-    const changeSet = this.readChangeSet();
-    const partnerDataHash = this.hashEntity(partnerData);
-    changeSet.partners[partnerId] = {
-      hash: partnerDataHash,
-    };
-
-    const pathToPartnerLocations = path.join(
-      this.pathToPartnersDirectory,
-      partnerId,
-      "locations.csv"
-    );
-
-    if (fs.existsSync(pathToPartnerLocations)) {
-      const locationsFileContents = fs.readFileSync(
-        pathToPartnerLocations,
-        "utf-8"
-      );
-      changeSet.partners[partnerId].locationsHash = this.hashString(
-        locationsFileContents
-      );
-    }
-
-    this.updateChangeSet(changeSet);
-  }
-
-  private handlePartnerRemoval(partnerId: string) {
-    const changeSet = this.readChangeSet();
-    delete changeSet.partners[partnerId];
-    this.updateChangeSet(changeSet);
   }
 
   private readChangeSet() {
