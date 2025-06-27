@@ -1,26 +1,37 @@
-import { db } from "./database/db";
-import { IPoint } from "./model/i-point";
-import { ContextualizedReward } from "./database/entities/contextualized-reward";
+main();
 
-async function tryQuery({ latitude, longitude }: IPoint) {
-  const results = await db.em.execute(
-    `SELECT * FROM get_contextualized_rewards(
-      redemption_forum_filter => 'all',
-      cursor_position => null,
-      sort_order => 'a-z',≈
-      latitude => ${latitude}, 
-      longitude => ${longitude},
-      max_distance => 'infinity',
-      ignore_max_distance_for_online_rewards => TRUE,
-      max_num_results => null
-    )`
-  );
-
-  console.log(results);
-
-  const mappedResults = results.map((result) =>
-    db.em.map(ContextualizedReward, result)
-  );
-
-  console.log(mappedResults);
+async function main() {
+  await syncDatabase();
+  startServer();
 }
+
+async function syncDatabase() {
+  await syncPartners();
+  await Promise.all([syncLocations(), syncRewards()]);
+  // how to leverage parallelization?
+}
+
+async function syncPartners() {
+  await deleteRemovedPartners();
+  await updateExistingPartners(); // more efficient to do this first
+  await createNewPartners();
+}
+
+async function deleteRemovedPartners() {}
+
+async function createNewPartners() {}
+
+async function updateExistingPartners() {}
+
+async function syncLocations() {}
+
+async function syncRewards() {}
+
+function startServer() {}
+
+// a script watches for changes in entities and generates new hashes
+// this way, hashes are always generated locally
+// nodemon watches for changes in the hashes folder and recompiles and restarts
+// the application
+
+// fs.watch plus pm2 could be used for these purposes

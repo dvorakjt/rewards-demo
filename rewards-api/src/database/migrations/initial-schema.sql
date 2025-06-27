@@ -52,8 +52,16 @@ CREATE TABLE partners (
   description TEXT NOT NULL,
   website VARCHAR(255),
   why8by8 TEXT,
+  hash TEXT NOT NULL,
+);
+
+CREATE TABLE locations_hashes (
+  id SERIAL PRIMARY KEY,
+  partner_id VARCHAR(255) NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
   hash TEXT NOT NULL
 );
+
+CREATE INDEX locations_hashes_index ON locations_hashes (partner_id);
 
 CREATE TABLE locations (
   id SERIAL PRIMARY KEY,
