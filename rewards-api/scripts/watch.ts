@@ -16,9 +16,11 @@ export function watch(
   const childProcess = spawn(python, [pathToPythonScript, path]);
   const parser = new JSONStreamParser();
   childProcess.stdout.pipe(parser);
+  childProcess.stderr.on("data", (data) => console.log(data));
   parser.on("data", (data) => {
     callback(data.eventType, data.srcPath, data.destPath);
   });
+  // should probably check in on child process periodically
   const killMainProcess = keepAlive();
 
   return {

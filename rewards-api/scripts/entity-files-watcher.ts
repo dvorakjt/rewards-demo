@@ -3,7 +3,9 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { z } from "zod";
 import { watch } from "./watch";
+import { RedemptionForum } from "../src/model/redemption-forum";
 import type { IPartner } from "../src/model/i-partner";
+import type { IReward } from "../src/model/i-reward";
 
 /*
   Notes:
@@ -22,18 +24,27 @@ import type { IPartner } from "../src/model/i-partner";
      - deleting an invalid partner directory
      - deleting files from a valid partner directory
      - deleting files from an invalid partner directory
+  3. Kind of want this to live in src
 */
 export class EntityFilesWatcher {
   pathToPartnersDirectory = path.join(__dirname, "../src/partners");
   pathToRewardsDirectory = path.join(__dirname, "../src/rewards");
   pathToChangeSet = path.join(__dirname, "../changeset.json");
+
   partnerDataSchema = z.object({
     name: z.string(),
     website: z.string().optional(),
   });
 
+  rewardDataSchema = z.object({
+    shortDescription: z.string(),
+    redemptionForums: z.array(z.nativeEnum(RedemptionForum)),
+    expirationDate: z.date().optional(),
+  });
+
   watchEntityFiles() {
     this.watchPartnersDirectory();
+    this.watchRewardsDirectory();
   }
 
   private watchPartnersDirectory() {
@@ -44,6 +55,18 @@ export class EntityFilesWatcher {
 
       if (destinationPath.startsWith(this.pathToPartnersDirectory)) {
         this.processPartner(destinationPath);
+      }
+    });
+  }
+
+  private watchRewardsDirectory() {
+    watch(this.pathToRewardsDirectory, (_, sourcePath, destinationPath) => {
+      if (sourcePath.startsWith(this.pathToRewardsDirectory)) {
+        this.processReward(sourcePath);
+      }
+
+      if (destinationPath.startsWith(this.pathToRewardsDirectory)) {
+        this.processReward(destinationPath);
       }
     });
   }
@@ -91,11 +114,12 @@ export class EntityFilesWatcher {
         const locationsHash = this.hashString(locations);
         changeSet.partners[partnerId].locationsHash = locationsHash;
       }
+      this.updateChangeSet(changeSet);
+      this.discoverRewards(partnerId);
     } else {
       delete changeSet.partners[partnerId];
+      this.updateChangeSet(changeSet);
     }
-
-    this.updateChangeSet(changeSet);
   }
 
   private readPartnerData(pathToPartnerDirectory: string) {
@@ -126,6 +150,125 @@ export class EntityFilesWatcher {
         }
 
         return parsedPartnerData;
+      } catch (e) {}
+    }
+
+    return null;
+  }
+
+  private discoverRewards(partnerId: string) {
+    const pathToPartnerRewardsDirectory = path.join(
+      this.pathToRewardsDirectory,
+      partnerId
+    );
+
+    if (fs.existsSync(pathToPartnerRewardsDirectory)) {
+      const rewardIds = fs.readdirSync(pathToPartnerRewardsDirectory);
+
+      for (const rewardId of rewardIds) {
+        const pathToReward = path.join(pathToPartnerRewardsDirectory, rewardId);
+        this.processReward(pathToReward);
+      }
+    }
+  }
+
+  private processReward(filepath: string) {
+    const changeSet = this.readChangeSet();
+    const pathToRewardsDirectoryWithTrailingSeparator =
+      this.pathToRewardsDirectory + path.sep;
+
+    let indexOfNextSeparator = filepath.indexOf(
+      path.sep,
+      pathToRewardsDirectoryWithTrailingSeparator.length
+    );
+
+    if (indexOfNextSeparator === -1) {
+      indexOfNextSeparator = filepath.length;
+    }
+
+    const partnerId = filepath.slice(
+      pathToRewardsDirectoryWithTrailingSeparator.length,
+      indexOfNextSeparator
+    );
+
+    if (!partnerId || !(partnerId in changeSet.partners)) return;
+
+    const pathToPartnerRewardsDirectory = path.join(
+      this.pathToRewardsDirectory,
+      partnerId
+    );
+
+    if (!fs.existsSync(pathToPartnerRewardsDirectory)) {
+      if (partnerId in changeSet.partners) {
+        delete changeSet.partners[partnerId].rewards;
+        this.updateChangeSet(changeSet);
+      }
+    } else {
+      const pathToPartnerRewardsDirectoryWithTrailingSep =
+        pathToPartnerRewardsDirectory + path.sep;
+
+      indexOfNextSeparator = filepath.indexOf(
+        path.sep,
+        pathToPartnerRewardsDirectoryWithTrailingSep.length
+      );
+
+      if (indexOfNextSeparator === -1) {
+        indexOfNextSeparator = filepath.length;
+      }
+
+      const rewardId = filepath.slice(
+        pathToPartnerRewardsDirectoryWithTrailingSep.length,
+        indexOfNextSeparator
+      );
+
+      if (!rewardId) return;
+
+      const pathToRewardDirectory = path.join(
+        pathToPartnerRewardsDirectory,
+        rewardId
+      );
+
+      const partnerChangeSet = changeSet.partners[partnerId];
+      const rewardData = this.readRewardData(pathToRewardDirectory);
+
+      if (rewardData) {
+        if (!("rewards" in partnerChangeSet)) {
+          partnerChangeSet.rewards = {};
+        }
+        const rewardHash = this.hashEntity(rewardData);
+        partnerChangeSet.rewards[rewardId] = rewardHash;
+      } else if ("rewards" in partnerChangeSet) {
+        delete partnerChangeSet.rewards[rewardId];
+      }
+
+      this.updateChangeSet(changeSet);
+    }
+  }
+
+  private readRewardData(pathToRewardDirectory: string) {
+    const pathToRewardData = path.join(pathToRewardDirectory, "data.ts");
+
+    if (fs.existsSync(pathToRewardData)) {
+      try {
+        delete require.cache[require.resolve(pathToRewardData)];
+        const { default: rawRewardData } = require(pathToRewardData);
+        const parsedRewardData = this.rewardDataSchema.parse(
+          rawRewardData
+        ) as Partial<IReward>;
+
+        const pathToLongDescription = path.join(
+          pathToRewardDirectory,
+          "long-description.md"
+        );
+        if (fs.existsSync(pathToLongDescription)) {
+          const longDescription = fs.readFileSync(
+            pathToLongDescription,
+            "utf-8"
+          );
+          parsedRewardData.longDescription = longDescription;
+        }
+
+        return parsedRewardData;
       } catch (e) {}
     }
 

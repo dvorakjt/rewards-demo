@@ -1,6 +1,6 @@
 import { IReward } from "./i-reward";
 
-export type IRewardData = Omit<
+export type RewardData = Omit<
   IReward,
   "id" | "partnerId" | "longDescription" | "hash"
 >;
