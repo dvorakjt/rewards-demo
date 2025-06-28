@@ -12,10 +12,10 @@ export class Partner implements IPartner {
   @Property({ type: TextType })
   description!: string;
 
-  @Property()
+  @Property({ nullable: true })
   website?: string;
 
-  @Property({ type: TextType })
+  @Property({ type: TextType, nullable: true })
   why8by8?: string;
 
   @Property({ type: TextType })

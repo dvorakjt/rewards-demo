@@ -1,0 +1,6 @@
+{
+  "watch": ["src/changeset.json"],
+  "execMap": {
+    "ts": "ts-node"
+  }
+}

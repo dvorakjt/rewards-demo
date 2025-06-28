@@ -9,7 +9,9 @@ const partnerDataSchema = z.object({
   website: z.string().optional(),
 });
 
-export function readPartnerData(pathToPartnerDirectory: string) {
+export function readPartnerData(
+  pathToPartnerDirectory: string
+): Omit<IPartner, "id" | "hash"> | null {
   const pathToPartnerData = path.join(
     pathToPartnerDirectory,
     PartnerDefinitionFiles.DataFile
@@ -27,9 +29,11 @@ export function readPartnerData(pathToPartnerDirectory: string) {
     try {
       delete require.cache[require.resolve(pathToPartnerData)];
       const { default: rawPartnerData } = require(pathToPartnerData);
-      const parsedPartnerData = partnerDataSchema.parse(
-        rawPartnerData
-      ) as Partial<IPartner>;
+      const parsedPartnerData = partnerDataSchema.parse(rawPartnerData) as Omit<
+        IPartner,
+        "id" | "hash"
+      >;
+
       const description = fs.readFileSync(pathToPartnerDescription, "utf-8");
       parsedPartnerData.description = description;
 

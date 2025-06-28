@@ -21,7 +21,6 @@ export class PointType extends Type<IPoint, string> {
   }
 
   convertToJSValue(value: string): IPoint {
-    console.log(value);
     const m = value.match(/point\((-?\d+(\.\d+)?) (-?\d+(\.\d+)?)\)/i)!;
     return {
       longitude: Number(m[1]),

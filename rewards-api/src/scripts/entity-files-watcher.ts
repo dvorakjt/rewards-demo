@@ -94,9 +94,10 @@ export class EntityFilesWatcher {
     partnerData: Partial<IPartner>
   ) {
     const changeSet = readChangeSet(this.pathToChangeSet);
-    changeSet.partners[partnerId] = {};
     const partnerHash = hashObject(partnerData);
-    changeSet.partners[partnerId].hash = partnerHash;
+    changeSet.partners[partnerId] = {
+      hash: partnerHash,
+    };
 
     const pathToPartnerDirectory = this.getPathToPartnerDirectory(partnerId);
     const pathToLocationsFile = path.join(
@@ -155,7 +156,7 @@ export class EntityFilesWatcher {
 
         if (rewardData) {
           this.hashRewardAndUpdateChangeSet(partnerId, rewardId, rewardData);
-        } else if (this.partnerHasRewardsInChangeSet(partnerId)) {
+        } else {
           this.removeRewardFromChangeSet(partnerId, rewardId);
         }
       } else {
@@ -247,14 +248,16 @@ export class EntityFilesWatcher {
       changeSet.partners[partnerId].rewards = {};
     }
     const hashedReward = hashObject(rewardData);
-    changeSet.partners[partnerId].rewards[rewardId] = hashedReward;
+    changeSet.partners[partnerId].rewards![rewardId] = hashedReward;
     updateChangeSet(this.pathToChangeSet, changeSet);
   }
 
   private removeRewardFromChangeSet(partnerId: string, rewardId: string) {
-    const changeSet = readChangeSet(this.pathToChangeSet);
-    delete changeSet.partners[partnerId].rewards[rewardId];
-    updateChangeSet(this.pathToChangeSet, changeSet);
+    if (this.partnerHasRewardsInChangeSet(partnerId)) {
+      const changeSet = readChangeSet(this.pathToChangeSet);
+      delete changeSet.partners[partnerId].rewards![rewardId];
+      updateChangeSet(this.pathToChangeSet, changeSet);
+    }
   }
 
   private removeAllPartnerRewardsFromChangeSet(partnerId: string) {
@@ -265,6 +268,6 @@ export class EntityFilesWatcher {
 
   private partnerHasRewardsInChangeSet(partnerId: string) {
     const changeSet = readChangeSet(this.pathToChangeSet);
-    return "rewards" in changeSet.partners[partnerId];
+    return !!changeSet.partners[partnerId].rewards;
   }
 }
