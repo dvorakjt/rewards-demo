@@ -22,7 +22,10 @@
     "@mikro-orm/core": "^6.4.16",
     "@mikro-orm/migrations": "^6.4.16",
     "@mikro-orm/postgresql": "^6.4.16",
+    "autodetect-decoder-stream": "^2.0.2",
+    "csv-reader": "^1.0.12",
     "dotenv": "^16.5.0",
+    "xxh3-ts": "^2.0.1",
     "zod": "^3.25.67"
   }
 }

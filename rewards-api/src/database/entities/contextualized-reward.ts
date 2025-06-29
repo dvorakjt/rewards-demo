@@ -22,10 +22,10 @@ export class ContextualizedReward implements IContextualizedReward {
   @Enum({ items: () => RedemptionForum, array: true })
   redemptionForums!: RedemptionForum[];
 
-  @Property({ type: TextType })
+  @Property({ type: TextType, nullable: true })
   longDescription?: string;
 
-  @Property()
+  @Property({ nullable: true })
   expirationDate?: Date;
 
   @Property()
@@ -37,15 +37,15 @@ export class ContextualizedReward implements IContextualizedReward {
   @Property({ type: TextType })
   partnerDescription!: string;
 
-  @Property()
+  @Property({ nullable: true })
   partnerWebsite?: string;
 
-  @Property({ type: TextType })
+  @Property({ type: TextType, nullable: true })
   partnerWhy8by8?: string;
 
-  @Property({ type: PointType })
+  @Property({ type: PointType, nullable: true })
   nearestLocationCoordinates?: IPoint;
 
-  @Property()
+  @Property({ nullable: true })
   distanceToNearestLocation?: number;
 }

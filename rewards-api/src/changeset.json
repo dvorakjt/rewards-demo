@@ -1,3 +1,7 @@
 {
-  "partners": {}
+  "partners": {
+    "amazon": {
+      "hash": "KH3mRDGV2dHFLuFDiJBGhA/T0qpOLpHJG4nlHRA901U="
+    }
+  }
 }

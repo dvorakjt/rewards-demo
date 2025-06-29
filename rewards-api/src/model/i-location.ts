@@ -7,7 +7,7 @@ export interface ILocation {
   /**
    * A unique identifier for the location.
    */
-  id: number;
+  id: bigint;
   /**
    * The id of the partner to whom the location belongs.
    */

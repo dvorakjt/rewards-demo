@@ -23,10 +23,10 @@ export class Reward implements IReward {
   @Enum({ items: () => RedemptionForum, array: true })
   redemptionForums!: RedemptionForum[];
 
-  @Property({ type: TextType })
+  @Property({ type: TextType, nullable: true })
   longDescription?: string;
 
-  @Property()
+  @Property({ nullable: true })
   expirationDate?: Date;
 
   @Property({ type: TextType })
