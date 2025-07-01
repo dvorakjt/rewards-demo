@@ -1,11 +1,16 @@
 {
   "partners": {
     "amazon": {
-      "lastModifiedAt": "2025-06-30T23:03:16.050Z",
-      "locationsLastModifiedAt": "2025-06-30T23:03:16.050Z",
+      "lastModifiedAt": "2025-07-01T06:56:26.358Z",
+      "locationsLastModifiedAt": "2025-07-01T06:56:26.358Z",
+      "rewards": {}
+    },
+    "barnes-and-noble": {
+      "lastModifiedAt": "2025-07-01T07:26:06.909Z",
+      "locationsLastModifiedAt": "2025-07-01T07:26:06.909Z",
       "rewards": {
         "4f74b4b4-439d-4b82-b51c-b6939cf5b38e": {
-          "lastModifiedAt": "2025-06-30T23:03:16.050Z"
+          "lastModifiedAt": "2025-07-01T07:26:06.909Z"
         }
       }
     }

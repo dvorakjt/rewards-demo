@@ -4,10 +4,13 @@ import { DatabaseSynchronizer } from "./database/synchronizers/database-synchron
 import { PartnersSynchronizer } from "./database/synchronizers/partners-synchronizer";
 import { LocationsSynchronizer } from "./database/synchronizers/locations-synchronizer";
 import { RewardsSynchronizer } from "./database/synchronizers/rewards-synchronizer";
-import { ChangeSetReader } from "./readers/change-set-reader";
-import { PartnerReader } from "./readers/partner-reader";
-import { LocationsReader } from "./readers/locations-reader";
-import { RewardReader } from "./readers/reward-reader";
+import { ChangeSetReaderWriter } from "./io/changeset-reader-writer";
+import { PartnerReader } from "./io/partner-reader";
+import { LocationsReader } from "./io/locations-reader";
+import { RewardReader } from "./io/reward-reader";
+import { watchFileOrDirectory } from "./change-detection/watch-file-or-directory";
+import { PartnerFilesWatcher } from "./change-detection/partner-files-watcher";
+import { RewardFilesWatcher } from "./change-detection/reward-files-watcher";
 
 main();
 
@@ -16,34 +19,48 @@ async function main() {
   const pathToRewardsDirectory = path.join(__dirname, "rewards");
   const pathToChangeSet = path.join(__dirname, "changeset.json");
 
-  const changeSetReader = new ChangeSetReader(pathToChangeSet);
+  const changeSetReader = new ChangeSetReaderWriter(pathToChangeSet);
   const partnerReader = new PartnerReader(pathToPartnersDirectory);
   const locationsReader = new LocationsReader(pathToPartnersDirectory);
   const rewardReader = new RewardReader(pathToRewardsDirectory);
 
-  const partnersSynchronizer = new PartnersSynchronizer(
-    changeSetReader,
-    partnerReader
-  );
-  const locationsSynchronizer = new LocationsSynchronizer(
-    changeSetReader,
-    locationsReader,
-    10
-  );
-  const rewardsSynchronizer = new RewardsSynchronizer(
-    changeSetReader,
-    rewardReader
+  // const partnersSynchronizer = new PartnersSynchronizer(
+  //   changeSetReader,
+  //   partnerReader
+  // );
+  // const locationsSynchronizer = new LocationsSynchronizer(
+  //   changeSetReader,
+  //   locationsReader,
+  //   10
+  // );
+  // const rewardsSynchronizer = new RewardsSynchronizer(
+  //   changeSetReader,
+  //   rewardReader
+  // );
+
+  // const databaseSynchronizer = new DatabaseSynchronizer(
+  //   partnersSynchronizer,
+  //   locationsSynchronizer,
+  //   rewardsSynchronizer
+  // );
+
+  // const entityManager = database.entityManager.fork();
+
+  // await databaseSynchronizer.synchronizeDatabase(entityManager);
+
+  // database.orm.close();
+
+  const partnersWatcher = new PartnerFilesWatcher(
+    pathToChangeSet,
+    pathToPartnersDirectory,
+    pathToRewardsDirectory
   );
 
-  const databaseSynchronizer = new DatabaseSynchronizer(
-    partnersSynchronizer,
-    locationsSynchronizer,
-    rewardsSynchronizer
+  const rewardsWatcher = new RewardFilesWatcher(
+    pathToChangeSet,
+    pathToRewardsDirectory
   );
 
-  const entityManager = database.entityManager.fork();
-
-  await databaseSynchronizer.synchronizeDatabase(entityManager);
-
-  database.orm.close();
+  partnersWatcher.watchPartnersDirectory();
+  rewardsWatcher.watchRewardsDirectory();
 }

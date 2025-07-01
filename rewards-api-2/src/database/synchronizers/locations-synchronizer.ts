@@ -1,8 +1,8 @@
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Location } from "../entities/location";
 import type { ILocationsSynchronizer } from "./i-locations-synchronizer";
-import type { ILocationsReader } from "../../readers/i-locations-reader";
-import type { IChangeSetReader } from "../../readers/i-change-set-reader";
+import type { ILocationsReader } from "../../io/i-locations-reader";
+import type { IChangeSetReader } from "../../io/i-changeset-reader";
 
 export class LocationsSynchronizer implements ILocationsSynchronizer {
   constructor(

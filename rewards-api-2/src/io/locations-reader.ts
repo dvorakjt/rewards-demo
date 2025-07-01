@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "node:path";
-import { streamPointsFromFile } from "../util/stream-points-from-file";
+import { streamPointsFromFile } from "./stream-points-from-file";
 import { PartnerDefinitionFiles } from "../constants/partner-definition-files";
-import type { ILocationsReader } from "../readers/i-locations-reader";
+import type { ILocationsReader } from "./i-locations-reader";
 import type { IPointStream } from "../model/i-point-stream";
 
 export class LocationsReader implements ILocationsReader {

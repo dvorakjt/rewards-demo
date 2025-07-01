@@ -1,8 +1,8 @@
 import { Reward } from "../entities/reward";
 import type { EntityManager } from "@mikro-orm/postgresql";
 import type { IRewardsSynchronizer } from "./i-rewards-synchronizer";
-import type { IChangeSetReader } from "../../readers/i-change-set-reader";
-import type { IRewardReader } from "../../readers/i-reward-reader";
+import type { IChangeSetReader } from "../../io/i-changeset-reader";
+import type { IRewardReader } from "../../io/i-reward-reader";
 
 export class RewardsSynchronizer implements IRewardsSynchronizer {
   constructor(

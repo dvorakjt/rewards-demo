@@ -1,8 +1,8 @@
 import { Partner } from "../entities/partner";
 import type { EntityManager } from "@mikro-orm/postgresql";
 import type { IPartnersSynchronizer } from "./i-partners-synchronizer";
-import type { IPartnerReader } from "../../readers/i-partner-reader";
-import type { IChangeSetReader } from "../../readers/i-change-set-reader";
+import type { IPartnerReader } from "../../io/i-partner-reader";
+import type { IChangeSetReader } from "../../io/i-changeset-reader";
 
 export class PartnersSynchronizer implements IPartnersSynchronizer {
   constructor(

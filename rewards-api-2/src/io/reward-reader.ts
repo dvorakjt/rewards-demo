@@ -31,6 +31,13 @@ export class RewardReader implements IRewardReader {
     return false;
   }
 
+  readPartnerRewardIds(partnerId: string): string[] {
+    const pathToPartnerRewardsDirectory =
+      this.getPathToPartnerRewardsDirectory(partnerId);
+    const rewardIds = fs.readdirSync(pathToPartnerRewardsDirectory);
+    return rewardIds;
+  }
+
   readRewardData(
     partnerId: string,
     rewardId: string
@@ -84,6 +91,12 @@ export class RewardReader implements IRewardReader {
     rewardId: string,
     file: RewardDefinitionFiles
   ) {
-    return path.join(this.pathToRewards, partnerId, rewardId, file);
+    const pathToPartnerRewardsDirectory =
+      this.getPathToPartnerRewardsDirectory(partnerId);
+    return path.join(pathToPartnerRewardsDirectory, rewardId, file);
+  }
+
+  private getPathToPartnerRewardsDirectory(partnerId: string) {
+    return path.join(this.pathToRewards, partnerId);
   }
 }
