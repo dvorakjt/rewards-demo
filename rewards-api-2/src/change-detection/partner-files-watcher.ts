@@ -98,7 +98,7 @@ export class PartnerFilesWatcher {
     this.changeSetReaderWriter.recordNewPartner(partnerId, now);
     const rewardIds = this.rewardReader.readPartnerRewardIds(partnerId);
     for (const rewardId of rewardIds) {
-      if (this.rewardReader.rewardHasRequiredData(partnerId, rewardId)) {
+      if (this.rewardReader.rewardHasRequiredData(rewardId)) {
         this.changeSetReaderWriter.recordOrUpdateReward(
           partnerId,
           rewardId,

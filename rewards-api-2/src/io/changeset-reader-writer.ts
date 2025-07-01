@@ -157,6 +157,12 @@ export class ChangeSetReaderWriter
     this.writeChangeSet(changeSet);
   }
 
+  public removeAllPartnerRewards(partnerId: string): void {
+    const changeSet = this.readChangeSet();
+    changeSet.partners[partnerId].rewards = {};
+    this.writeChangeSet(changeSet);
+  }
+
   private readChangeSet(): IChangeSet {
     const changeSetFileContents = fs.readFileSync(
       this.pathToChangeSet,

@@ -15,10 +15,11 @@ export class RewardReader implements IRewardReader {
 
   constructor(private readonly pathToRewards: string) {}
 
-  rewardHasRequiredData(partnerId: string, rewardId: string): boolean {
-    const pathToRewardDataFile = this.getPathToRewardDataFile(
-      partnerId,
-      rewardId
+  rewardHasRequiredData(rewardId: string): boolean {
+    const pathToRewardDirectory = this.getPathToRewardDirectory(rewardId);
+    const pathToRewardDataFile = path.join(
+      pathToRewardDirectory,
+      RewardDefinitionFiles.DataFile
     );
 
     if (fs.existsSync(pathToRewardDataFile)) {
@@ -32,30 +33,41 @@ export class RewardReader implements IRewardReader {
   }
 
   readPartnerRewardIds(partnerId: string): string[] {
-    const pathToPartnerRewardsDirectory =
-      this.getPathToPartnerRewardsDirectory(partnerId);
-    const rewardIds = fs.readdirSync(pathToPartnerRewardsDirectory);
-    return rewardIds;
+    const pathToPartnerRewardsDirectory = path.join(
+      this.pathToRewards,
+      partnerId
+    );
+    if (fs.existsSync(pathToPartnerRewardsDirectory)) {
+      const rewardIds = fs.readdirSync(pathToPartnerRewardsDirectory);
+      return rewardIds;
+    }
+
+    return [];
   }
 
-  readRewardData(
-    partnerId: string,
-    rewardId: string
-  ): Omit<IReward, "id" | "partnerId" | "lastModifiedAt"> {
-    const pathToRewardDataFile = this.getPathToRewardDataFile(
+  readRewardData(rewardId: string): Omit<IReward, "id" | "lastModifiedAt"> {
+    const partnerId = this.findOwningPartnerId(rewardId);
+    const pathToRewardDirectory = path.join(
+      this.pathToRewards,
       partnerId,
       rewardId
     );
+
+    const pathToRewardDataFile = path.join(
+      pathToRewardDirectory,
+      RewardDefinitionFiles.DataFile
+    );
+
     delete require.cache[require.resolve(pathToRewardDataFile)];
     const data = require(pathToRewardDataFile).default;
-    const rewardData = this.rewardDataSchema.parse(data) as Omit<
-      IReward,
-      "id" | "partnerId" | "lastModifiedAt"
-    >;
-
-    const pathToRewardLongDescription = this.getPathToRewardLongDescription(
+    const rewardData = {
       partnerId,
-      rewardId
+      ...this.rewardDataSchema.parse(data),
+    } as Omit<IReward, "id" | "lastModifiedAt">;
+
+    const pathToRewardLongDescription = path.join(
+      pathToRewardDirectory,
+      RewardDefinitionFiles.LongDescriptionFile
     );
 
     if (fs.existsSync(pathToRewardLongDescription)) {
@@ -70,33 +82,23 @@ export class RewardReader implements IRewardReader {
     return rewardData;
   }
 
-  private getPathToRewardDataFile(partnerId: string, rewardId: string) {
-    return this.getPathToRewardFile(
-      partnerId,
-      rewardId,
-      RewardDefinitionFiles.DataFile
-    );
+  private getPathToRewardDirectory(rewardId: string) {
+    const owningPartnerId = this.findOwningPartnerId(rewardId);
+    return path.join(this.pathToRewards, owningPartnerId, rewardId);
   }
 
-  private getPathToRewardLongDescription(partnerId: string, rewardId: string) {
-    return this.getPathToRewardFile(
-      partnerId,
-      rewardId,
-      RewardDefinitionFiles.LongDescriptionFile
-    );
-  }
+  private findOwningPartnerId(rewardId: string) {
+    const partnerIds = fs.readdirSync(this.pathToRewards);
+    for (const partnerId of partnerIds) {
+      const pathToPartnerDir = path.join(this.pathToRewards, partnerId);
 
-  private getPathToRewardFile(
-    partnerId: string,
-    rewardId: string,
-    file: RewardDefinitionFiles
-  ) {
-    const pathToPartnerRewardsDirectory =
-      this.getPathToPartnerRewardsDirectory(partnerId);
-    return path.join(pathToPartnerRewardsDirectory, rewardId, file);
-  }
+      const partnerRewards = fs.readdirSync(pathToPartnerDir);
 
-  private getPathToPartnerRewardsDirectory(partnerId: string) {
-    return path.join(this.pathToRewards, partnerId);
+      if (partnerRewards.includes(rewardId)) {
+        return partnerId;
+      }
+    }
+
+    throw new Error("No partner owns this reward");
   }
 }

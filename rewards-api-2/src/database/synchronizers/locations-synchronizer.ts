@@ -4,6 +4,9 @@ import type { ILocationsSynchronizer } from "./i-locations-synchronizer";
 import type { ILocationsReader } from "../../io/i-locations-reader";
 import type { IChangeSetReader } from "../../io/i-changeset-reader";
 
+// out of memory error happening with 1 million rows, batch size of 10
+// i suspect this is a backpressure issue...more rows are streamed than
+// are processed? or an issue with clearing the entity manager
 export class LocationsSynchronizer implements ILocationsSynchronizer {
   constructor(
     private readonly changeSetReader: IChangeSetReader,

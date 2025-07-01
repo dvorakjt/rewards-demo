@@ -36,26 +36,33 @@ export class RewardFilesWatcher {
     const rewardId = this.extractRewardIdFromFilePath(partnerId, filepath);
 
     if (this.changeSetReaderWriter.hasPartner(partnerId)) {
-      const rewardHasRequiredData = this.rewardReader.rewardHasRequiredData(
-        partnerId,
-        rewardId
-      );
+      const partnerRewardIds =
+        this.rewardReader.readPartnerRewardIds(partnerId);
 
-      if (rewardHasRequiredData) {
-        const modifiedFile = this.extractModifiedFileFromFilePath(filepath);
-        const definitionFileWasModified = this.wasDefinitionFileModified(
-          rewardId,
-          modifiedFile
-        );
-        if (definitionFileWasModified) {
-          this.changeSetReaderWriter.recordOrUpdateReward(
-            partnerId,
+      if (partnerRewardIds.length > 0) {
+        const rewardBelongsToPartner = partnerRewardIds.includes(rewardId);
+
+        if (
+          rewardBelongsToPartner &&
+          this.rewardReader.rewardHasRequiredData(rewardId)
+        ) {
+          const modifiedFile = this.extractModifiedFileFromFilePath(filepath);
+          const definitionFileWasModified = this.wasDefinitionFileModified(
             rewardId,
-            new Date()
+            modifiedFile
           );
+          if (definitionFileWasModified) {
+            this.changeSetReaderWriter.recordOrUpdateReward(
+              partnerId,
+              rewardId,
+              new Date()
+            );
+          }
+        } else {
+          this.removeRewardFromChangeSet(partnerId, rewardId);
         }
       } else {
-        this.removeRewardFromChangeSet(partnerId, rewardId);
+        this.removeAllPartnerRewardsFromChangeSet(partnerId);
       }
     }
   }
@@ -116,5 +123,9 @@ export class RewardFilesWatcher {
 
   private removeRewardFromChangeSet(partnerId: string, rewardId: string) {
     this.changeSetReaderWriter.removeReward(partnerId, rewardId);
+  }
+
+  private removeAllPartnerRewardsFromChangeSet(partnerId: string) {
+    this.changeSetReaderWriter.removeAllPartnerRewards(partnerId);
   }
 }

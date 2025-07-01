@@ -12,4 +12,5 @@ export interface IChangeSetWriter {
     lastModifiedAt: Date
   ): void;
   removeReward(partnerId: string, rewardId: string): void;
+  removeAllPartnerRewards(partnerId: string): void;
 }
