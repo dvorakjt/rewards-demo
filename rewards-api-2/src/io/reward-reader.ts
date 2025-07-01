@@ -5,6 +5,7 @@ import { RewardDefinitionFiles } from "../constants/reward-definition-files";
 import { RedemptionForum } from "../constants/redemption-forum";
 import type { IRewardReader } from "./i-reward-reader";
 import type { IReward } from "../model/i-reward";
+import { ClaimReward } from "../model/claim-reward";
 
 export class RewardReader implements IRewardReader {
   private rewardDataSchema = z.object({
@@ -80,6 +81,25 @@ export class RewardReader implements IRewardReader {
     }
 
     return rewardData;
+  }
+
+  public readClaimMethod(rewardId: string) {
+    const pathToRewardDirectory = this.getPathToRewardDirectory(rewardId);
+
+    const pathToClaimFunctionFile = path.join(
+      pathToRewardDirectory,
+      RewardDefinitionFiles.ClaimFunctionFile
+    );
+
+    if (fs.existsSync(pathToClaimFunctionFile)) {
+      delete require.cache[require.resolve(pathToClaimFunctionFile)];
+      const claim = require(pathToClaimFunctionFile).default;
+      if (typeof claim === "function") {
+        return claim as ClaimReward;
+      }
+    }
+
+    throw new Error("No claim function exists for reward " + rewardId);
   }
 
   private getPathToRewardDirectory(rewardId: string) {
